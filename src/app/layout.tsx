@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar";
 import { siteConfig } from "@/config/site";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-heading" });
@@ -32,6 +33,7 @@ export default function RootLayout({
             <div className="flex-grow flex-1">
               {children}
             </div>
+            <Footer />
           </main>
         </ThemeProvider>
       </body>
