@@ -2,8 +2,17 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Header from "@/components/header";
 import SortButton from "@/components/sort-button";
 import { Input } from "@/components/ui/input";
+import { prisma } from "@/lib/prisma";
 
-export default function TransportPage() {
+async function getPosts() {
+  const posts = await prisma.transport.findMany();
+  return posts;
+}
+
+export default async function TransportPage() {
+  // const posts = await getPosts();
+  // console.log({ posts });
+
   return (
     <MaxWidthWrapper>
       <div className="grid flex-1 my-7">
