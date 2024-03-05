@@ -1,22 +1,41 @@
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 
-export default function SortButton() {
+type SortButtonProps = {
+  name: string;
+  value: string;
+} 
+
+export default function SortButton({ 
+  buttons, 
+  placeholder,
+  value,
+  onValueChange
+}: { 
+  buttons: SortButtonProps[], 
+  placeholder: string,
+  value: string,
+  onValueChange: (value: string) => void
+}) {
   return (
-    <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Сортировка"/>
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className="lg:w-[180px]">
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="alphabet">Алфавит</SelectItem>
-        <SelectItem value="unreachable">Недоступна</SelectItem>
+        {buttons.map(button => (
+          <SelectItem
+            key={button.value} 
+            value={button.value}
+          >
+            {button.name}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   )
