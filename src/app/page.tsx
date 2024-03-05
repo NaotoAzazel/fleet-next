@@ -27,7 +27,7 @@ export default function Home() {
                 Авторизация
               </Link>
               <Link 
-                href={siteConfig.gitHubUrl} 
+                href={siteConfig.gitHub} 
                 className={buttonVariants({ variant: "outline" })}
               >
                 GitHub

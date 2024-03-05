@@ -14,7 +14,7 @@ export type NavbarConfig = {
 
 export type SiteConfig = {
   name: string,
-  gitHubUrl: string,
+  gitHub: string,
 };
 
 export type FeatureItem = {
