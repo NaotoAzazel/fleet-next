@@ -1,7 +1,5 @@
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Header from "@/components/header";
-import SortButton from "@/components/sort-button";
-import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
 import Filter from "@/components/filter";
 import ProductCard from "@/components/product-card";
@@ -11,13 +9,7 @@ async function getPosts() {
   return posts;
 }
 
-export default async function TransportPage() {
-  // const posts = await getPosts();
-  // console.log({ posts });
-
-  const myId = 1;
-  const adminsId = new Set([1]);
-
+export default function TransportPage() {
   const array = Array.from({ length: 10 });
 
   return (
@@ -27,8 +19,8 @@ export default async function TransportPage() {
         <Filter />
 
         <div className="my-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {array.map((v) => (
-            <ProductCard />
+          {array.map((_, i) => (
+            <ProductCard key={i} />
           ))}
         </div>
       </div>
