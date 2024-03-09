@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { Transport } from "@/types";
 
-export default function ProductCard(fields: any) {
-  const title = 'title'; 
-
+export default function ProductCard({ post }: { post: Transport }) {
   return (
     <div className="border border-borderColor overflow-hidden rounded-[10px]">
       <div className="flex flex-col border-borderColor p-0">
@@ -10,10 +9,11 @@ export default function ProductCard(fields: any) {
           <div className="absolute inset-0">
             <div className="flex w-full h-full items-center justify-center bg-secondary">
               <img 
-                src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds" 
+                // src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds" 
                 className="absolute h-full w-full inset-0 border-borderColor object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 loading="lazy"
+                alt="text"
               /> 
             </div>
           </div>
@@ -21,7 +21,7 @@ export default function ProductCard(fields: any) {
       </div>
 
       <div className="p-4">
-        <h1>{title}</h1>
+        <h1>{post.name}</h1>
       </div>
 
       <div className="flex items-center p-4">

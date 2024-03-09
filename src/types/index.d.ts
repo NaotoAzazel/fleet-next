@@ -24,3 +24,15 @@ export type FeatureItem = {
 };
 
 export type FeatureCards = FeatureItem[];
+
+export type Transport = {
+  id: number;
+  name: string;
+  takeBy: string;
+  color: string;
+  plate: string;
+  category: string;
+  image: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
