@@ -30,7 +30,9 @@ export default async function TransportPage({
     <MaxWidthWrapper>
       <div className="grid flex-1 my-7">
         <Header heading="Список доступного транспорта" text="Резервируйте транспорт в один клик" />
-        <Filter />
+        <Suspense>
+          <Filter />
+        </Suspense>
 
         <div className="my-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {posts.map((post, i) => (
