@@ -4,6 +4,7 @@ import Filter from "@/components/filter";
 import ProductCard from "@/components/product-card";
 import { Transport } from "@/types";
 import { getPostsByParams } from "@/lib/posts";
+import { sortParams, statusParams } from "@/config/filter-options";
 
 export default async function TransportPage({ 
   searchParams 
@@ -12,8 +13,19 @@ export default async function TransportPage({
 }) {
   let posts: Transport[] = [];
   const searchQuery = searchParams.search ?? "";
-  const statusQuery = searchParams.s as "avai" | "unavai" | "all" ?? "all";
-  const sortQuery = searchParams.sort as "asc" | "desc" ?? "asc";
+  let statusQuery = searchParams.s as "avai" | "unavai" | "all" ?? "all";
+  let sortQuery = searchParams.sort as "asc" | "desc" ?? "asc";
+
+  const isValidStatus = statusParams.find(param => param.value === statusQuery);
+  const isValidSort = sortParams.find(param => param.value === sortQuery);
+  
+  if(!isValidStatus) {
+    statusQuery = "all";
+  }
+
+  if(!isValidSort) {
+    sortQuery = "asc";
+  }
 
   const initialPosts = await getPostsByParams();
   const filteredPosts = await getPostsByParams(searchQuery, sortQuery, statusQuery);
