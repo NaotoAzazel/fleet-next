@@ -1,17 +1,30 @@
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Header from "@/components/header";
-import { prisma } from "@/lib/prisma";
 import Filter from "@/components/filter";
 import ProductCard from "@/components/product-card";
-import { Suspense } from "react";
+import { Transport } from "@/types";
+import { getPostsByParams } from "@/lib/posts";
 
-async function getPosts() {
-  const posts = await prisma.transport.findMany();
-  return posts;
-}
+export default async function TransportPage({ 
+  searchParams 
+}: { 
+  searchParams: { search?: string, sort?: string, s?: string }
+}) {
+  let posts: Transport[] = [];
+  const searchQuery = searchParams.search ?? "";
+  const statusQuery = searchParams.s as "avai" | "unavai" | "all" ?? "all";
+  const sortQuery = searchParams.sort as "asc" | "desc" ?? "asc";
 
-export default function TransportPage() {
-  const array = Array.from({ length: 10 });
+  const initialPosts = await getPostsByParams();
+  const filteredPosts = await getPostsByParams(searchQuery, sortQuery, statusQuery);
+
+  if (searchQuery.length || statusQuery.length > 3 || sortQuery.length > 3) {
+    if (filteredPosts) {
+      posts = filteredPosts;
+    } else posts = [];
+  } else {
+    posts = initialPosts ?? [];
+  }
 
   return (
     <MaxWidthWrapper>
@@ -22,8 +35,8 @@ export default function TransportPage() {
         </Suspense>
 
         <div className="my-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {array.map((_, i) => (
-            <ProductCard key={i} />
+          {posts.map((post, i) => (
+            <ProductCard post={post} key={i} />
           ))}
         </div>
       </div>
