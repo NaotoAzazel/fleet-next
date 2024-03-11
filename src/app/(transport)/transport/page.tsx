@@ -27,8 +27,8 @@ export default async function TransportPage({
     sortQuery = "asc";
   }
 
-  const initialPosts = await getPostsByParams();
-  const filteredPosts = await getPostsByParams(searchQuery, sortQuery, statusQuery);
+  const { data: initialPosts } = await getPostsByParams();
+  const { data: filteredPosts } = await getPostsByParams(searchQuery, sortQuery, statusQuery);
 
   if (searchQuery.length || statusQuery.length > 3 || sortQuery.length > 3) {
     if (filteredPosts) {

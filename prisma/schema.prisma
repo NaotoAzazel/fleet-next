@@ -9,13 +9,27 @@ datasource db {
 }
 
 model Transport {
+  id          Int      @id @default(autoincrement())
+  name        String
+  takeBy      String
+  colorId     Int      
+  categoryId  Int      
+  plate       String
+  image       String
+  color       Color    @relation(fields: [colorId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Category {
   id        Int      @id @default(autoincrement())
-  name      String
-  takeBy    String
-  color     String
-  plate     String
-  category  String
-  image     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt       
+  name      String   @unique
+  transports Transport[]
+}
+
+model Color {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  transports Transport[]
 }

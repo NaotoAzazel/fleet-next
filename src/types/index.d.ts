@@ -29,10 +29,17 @@ export type Transport = {
   id: number;
   name: string;
   takeBy: string;
-  color: string;
+  colorId: number;
+  categoryId: number;
   plate: string;
-  category: string;
   image: string;
   createdAt: Date;
   updatedAt: Date;
+  color: Color;
+  category: Category;
 };
+
+export type FilterItem = {
+  id: number;
+  name: string;
+}
