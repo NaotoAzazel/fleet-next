@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import useUser from "@/hook/useUser";
-import ProfileMenu from "./profile-menu";
+import ProfileMenu from "@/components/profile-menu";
 
 export default function AuthButton() {
   const supabase = supabaseBrowser();
