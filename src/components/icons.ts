@@ -13,7 +13,10 @@ import {
   MoreVertical,
   Loader2,
   Trash,
-  Car
+  Car,
+  NotepadText,
+  PaintBucket,
+  LibrarySquare
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -32,5 +35,8 @@ export const Icons = {
   ellipsis: MoreVertical,
   spinner: Loader2,
   trash: Trash,
-  car: Car
+  car: Car,
+  notepad: NotepadText,
+  color: PaintBucket,
+  category: LibrarySquare
 };
