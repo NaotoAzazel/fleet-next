@@ -141,7 +141,7 @@ export default function EditTransport({
     setCategoryId(String(post.categoryId));
     setPlate(post.plate);
     setImage(post.image);
-  }, []);
+  }, [showEditDialog]);
 
   return (
     <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
