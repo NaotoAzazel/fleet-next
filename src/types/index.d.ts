@@ -25,6 +25,21 @@ export type FeatureItem = {
 
 export type FeatureCards = FeatureItem[];
 
+export type SidebarNavItem = {
+  title: string
+  disabled?: boolean
+  icon?: keyof typeof Icons
+} & (
+  | {
+      href: string
+      items?: never
+    }
+)
+
+export type DashboardConfig = {
+  sidebarNav: SidebarNavItem[]
+}
+
 export type Transport = {
   id: number;
   name: string;

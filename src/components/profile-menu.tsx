@@ -9,18 +9,30 @@ import {
   DropdownMenuItem, 
   DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
+
 import { User } from "@supabase/supabase-js";
-import { useQueryClient } from "@tanstack/react-query";
 import { supabaseBrowser } from "@/lib/supabase/browser";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { adminIds } from "@/lib/constants";
+import { dashboardConfig } from "@/config/dashboard";
 
-export default function ProfileMenu({ user }: { user : User | undefined | null }) {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+export default function ProfileMenu({ 
+  user 
+}: { 
+  user : User | undefined | null 
+}) {
   const supabase = supabaseBrowser();
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
 
   const signOut = async() => {
 		await supabase.auth.signOut();
@@ -29,7 +41,7 @@ export default function ProfileMenu({ user }: { user : User | undefined | null }
   }
   
   return (
-    <DropdownMenu>
+    <DropdownMenu open={openMenu} onOpenChange={setOpenMenu}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
           <Icons.user className="h-5 w-5" />
@@ -47,9 +59,19 @@ export default function ProfileMenu({ user }: { user : User | undefined | null }
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {adminIds.has(user?.user_metadata.sub) && (
-            <DropdownMenuItem onClick={signOut}>
-              Добавить транспорт
-            </DropdownMenuItem>
+            <>
+              {dashboardConfig.sidebarNav.map((item, i) => (
+                <Link key={i} href={item.href}>
+                  <DropdownMenuItem 
+                    key={i} 
+                    onClick={() => setOpenMenu(false)}
+                  >
+                    {item.title}
+                  </DropdownMenuItem>
+                </Link>
+              ))}
+              <DropdownMenuSeparator />
+            </>
           )}
           <DropdownMenuItem onClick={signOut}>
             Выйти
