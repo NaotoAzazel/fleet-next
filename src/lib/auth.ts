@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { adminIds } from "@/lib/constants";
 
 export async function currentUser(): Promise<any> {
   const cookieStore = cookies();
@@ -17,4 +18,8 @@ export async function currentUser(): Promise<any> {
   )
   const { data } = await supabase.auth.getSession();
   return data?.session;
+}
+
+export function verifyCurrentUserIsAdmin(userId: string | undefined): boolean {
+  return adminIds.has(String(userId));
 }

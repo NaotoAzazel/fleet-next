@@ -9,47 +9,116 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import SelectFilter from "@/components/select";
-import { useEffect, useState } from "react";
-import { FilterItem } from "@/types";
-import { useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 
+import { postCreateSchema } from "@/lib/validation/post";
+import { FilterItem } from "@/types";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { formatImage } from "@/lib/utils";
+import { fetchCategories, fetchColors } from "@/lib/posts";
+
+const DEFAULT_VALUES = {
+  name: "",
+  plate: "",
+  categoryId: 0,
+  colorId: 0,
+  image: ""
+};
+
+async function createPost(
+  name: string,
+  colorId: number,
+  categoryId: number,
+  plate: string,
+  image: string
+) {
+  const response = await fetch("/api/posts", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({ 
+      name, 
+      colorId,
+      categoryId,
+      plate, 
+      image 
+    })
+  });
+
+  if(!response?.ok) {
+    console.error("Something went wrong when create post", response);
+    return false;
+  }
+  
+  return true;
+}
+
 export default function AddTransport({ variant = "default" }: { variant?: "outline" | "default" }) {
+  const router = useRouter();
+
   const [colors, setColors] = useState<FilterItem[]>([]);
   const [categories, setCategories] = useState<FilterItem[]>([]);
+  const [colorId, setColorId] = useState<string>("");
+  const [categoryId, setCategoryId] = useState<string>("");
+  const [image, setImage] = useState<string>("");
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
-  const router = useRouter();
+  const onSubmit = async(values: z.infer<typeof postCreateSchema>) => {
+    const { name, plate, categoryId, colorId } = values;
 
-  const fetchColors = async() => {
-    try {
-      const response = await fetch("/api/posts/colors");
-      const data = await response.json();
-      setColors(data as FilterItem[]);
-    } catch(err) {
-      console.error(err);
-    }
-  }
+    setIsLoading(true);
 
-  const fetchCategories = async() => {
-    try {
-      const response = await fetch("/api/posts/categories");
-      const data = await response.json();
-      setCategories(data as FilterItem[]);
-    } catch(err) {
-      console.error(err);
+    const createdPost = await createPost(
+      name, Number(colorId), Number(categoryId), plate, image
+    );
+    
+    if(createdPost) {
+      setIsLoading(false);
+      router.refresh();
     }
-  }
+
+    setIsLoading(false);
+    setShowDialog(false);
+  };
+
+  const form = useForm<z.infer<typeof postCreateSchema>>({
+    resolver: zodResolver(postCreateSchema),
+    defaultValues: DEFAULT_VALUES
+  });
 
   useEffect(() => {
-    fetchColors();
-    fetchCategories();
+    const fetchData = async() => {
+      const colors = await fetchColors();
+      const categories = await fetchCategories();
+
+      setColors(colors);
+      setCategories(categories);
+    }
+
+    setColorId("")
+    setCategoryId("");
+    fetchData();
+    form.reset();
   }, [showDialog]);
 
   return (
@@ -64,50 +133,128 @@ export default function AddTransport({ variant = "default" }: { variant?: "outli
             Занесите данные в поля чтобы добавить новый транспорт
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4 space-y-4">
-          <div className="flex gap-2">
-            <SelectFilter placeholder="Цвет" items={colors} />
-            <SelectFilter placeholder="Категория" items={categories} />
-          </div>
-          {/** TODO: make validation for inputs */}
-          <div className="grid w-full gap-4">
-            <Label htmlFor="name">Название</Label>
-            <Input id="name" placeholder="Ламборгини"/>
-          </div>
 
-          <div className="grid w-full gap-4">
-            <Label htmlFor="plate">Номера</Label>
-            <Input id="plate" placeholder="A1235B"/>
-          </div>
 
-          <div className="grid w-full gap-4">
-            <Label htmlFor="picture">Картинка</Label>
-            <Input id="picture" type="file" />
-          </div>
-        </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-2"
+          > 
+            <div className="grid grid-cols-2 gap-2">
+              <FormField
+                control={form.control}
+                name="colorId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <SelectFilter
+                        placeholder="Цвет" 
+                        items={colors}
+                        value={colorId}
+                        onValueChange={(value) => {
+                          setColorId(value)
+                          field.onChange(Number(value))
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <DialogFooter>
-          <Button 
-            size="sm"
-            disabled={isLoading}
-            onClick={async(e) => {
-              e.preventDefault();
-              setIsLoading(true);
+              <FormField 
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <SelectFilter
+                        placeholder="Категория" 
+                        items={categories}
+                        value={categoryId}
+                        onValueChange={(value) => {
+                          setCategoryId(value)
+                          field.onChange(Number(value))
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-              // temporarily simulating loading
-              setTimeout(() => {
-                setIsLoading(false);
-                setShowDialog(false);
-                router.refresh();
-              }, 2000);
-            }}
-          >
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            <span>Добавить</span>
-          </Button>
-        </DialogFooter>
+            <FormField 
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Название</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="off"
+                      placeholder="Ламборгини"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField 
+              control={form.control}
+              name="plate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Номера</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="off"
+                      placeholder="A1235B"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField 
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Картинка</FormLabel>
+                    <Input
+                      type="file"
+                      accept="image/jpeg, image/png"
+                      onChange={(e) => {
+                        formatImage(e, setImage);
+                        field.onChange(String(e.target.files))
+                      }}
+                    />
+                  <FormControl>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button
+                disabled={isLoading || !form.formState.isValid}
+                type="submit"
+              >
+                {isLoading && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                <span>Добавить</span>
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+
       </DialogContent>
     </Dialog>
   )

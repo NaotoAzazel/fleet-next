@@ -1,7 +1,6 @@
-import { currentUser } from "@/lib/auth";
+import { currentUser, verifyCurrentUserIsAdmin } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { adminIds } from "@/lib/constants";
 import { postPatchSchema } from "@/lib/validation/post";
 import * as z from "zod";
 
@@ -69,8 +68,4 @@ export async function PUT(
   });
 
   return new NextResponse(null, { status: 200 });
-}
-
-function verifyCurrentUserIsAdmin(userId: string | undefined): boolean {
-  return adminIds.has(String(userId));
 }
