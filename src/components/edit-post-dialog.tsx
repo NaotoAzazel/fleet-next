@@ -8,27 +8,37 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import SelectFilter from "@/components/select";
-import { useEffect, useState } from "react";
-import { FilterItem, Transport } from "@/types";
 import { Icons } from "@/components/icons";
+import SelectFilter from "@/components/select";
+
+import { postSchema } from "@/lib/validation/post";
+import { FilterItem, Transport } from "@/types";
+
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 export async function updatePost(
   postId: number,
   name: string,
-  colorId: string,
-  categoryId: string,
+  colorId: number,
+  categoryId: number,
   plate: string,
   image: string
 ) {
-  const colorIdToNumber = Number(colorId);
-  const categoryIdToNumber = Number(categoryId);
-
   const response = await fetch(`/api/posts/${postId}`, {
     method: "PUT",
     headers: {
@@ -36,8 +46,8 @@ export async function updatePost(
     },
     body: JSON.stringify({ 
       name, 
-      colorId: colorIdToNumber, 
-      categoryId: categoryIdToNumber, 
+      colorId,
+      categoryId,
       plate, 
       image 
     })
@@ -66,10 +76,8 @@ export default function EditTransport({
   const [categories, setCategories] = useState<FilterItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [name, setName] = useState<string>("");
   const [colorId, setColorId] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
-  const [plate, setPlate] = useState<string>("");
   const [image, setImage] = useState<any>();
 
   const fetchColors = async() => {
@@ -130,14 +138,38 @@ export default function EditTransport({
     }
   }
 
+  const onSubmit = async(values: z.infer<typeof postSchema>) => {
+    const { name, plate } = values;
+
+    setIsLoading(true);
+
+    const updatedPost = await updatePost(
+      post.id, name, Number(colorId), Number(categoryId), plate, image
+    );
+    
+    if(updatedPost) {
+      setIsLoading(false);
+      router.refresh();
+    }
+
+    setIsLoading(false);
+    setShowEditDialog(false);
+  };
+
+  const form = useForm<z.infer<typeof postSchema>>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      name: post.name,
+      plate: post.plate,
+    }
+  });
+
   useEffect(() => {
     fetchColors();
     fetchCategories();
 
-    setName(post.name);
     setColorId(String(post.colorId));
     setCategoryId(String(post.categoryId));
-    setPlate(post.plate);
     setImage(post.image);
   }, [showEditDialog]);
 
@@ -151,80 +183,87 @@ export default function EditTransport({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4 space-y-4">
-          <div className="space-y-2">
-            <img
-              src={image}
-              alt="transport-image"
-              loading="lazy"
-              className="inset-0 object-cover rounded border"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            <Input 
-              type="file"
-              onChange={(e) => handleFileUpload(e)} 
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <SelectFilter 
-              placeholder="Цвет" 
-              items={colors} 
-              value={colorId}
-              onValueChange={setColorId}
-            />
-            <SelectFilter 
-              placeholder="Категория" 
-              items={categories}
-              value={categoryId}
-              onValueChange={setCategoryId}
-            />
-          </div>
-          {/** TODO: make validation for inputs */}
-          <div className="grid w-full gap-4">
-            <Label htmlFor="name">Название</Label>
-            <Input 
-              id="name" 
-              placeholder="Ламборгини" 
-              defaultValue={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className="grid w-full gap-4">
-            <Label htmlFor="plate">Номера</Label>
-            <Input 
-              id="plate" 
-              placeholder="A1235B"
-              defaultValue={plate}
-              onChange={(e) => setPlate(e.target.value)}
-            />
-          </div>
+        <div className="space-y-2">
+          <img
+            src={image}
+            alt="transport-image"
+            loading="lazy"
+            className="inset-0 object-cover rounded border"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          <Input 
+            type="file"
+            accept="image/jpeg, image/png"
+            onChange={(e) => handleFileUpload(e)} 
+          />
         </div>
 
-        <DialogFooter>
-          <Button
-            disabled={isLoading}
-            onClick={async(e) => {
-              e.preventDefault();
-              setIsLoading(true);
+        <div className="flex gap-2">
+          <SelectFilter 
+            placeholder="Цвет" 
+            items={colors} 
+            value={colorId}
+            onValueChange={setColorId}
+          />
+          <SelectFilter 
+            placeholder="Категория" 
+            items={categories}
+            value={categoryId}
+            onValueChange={setCategoryId}
+          />
+        </div>
+        <Form {...form}>
+          <form 
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-2"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Название</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Ламборгини"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              const updatedPost = await updatePost(post.id, name, colorId, categoryId, plate, image);
-              if(updatedPost) {
-                setIsLoading(false);
-                router.refresh();
-              }
+            <FormField
+              control={form.control}
+              name="plate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Номера</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="A1235B"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              setIsLoading(false);
-              setShowEditDialog(false);
-            }}
-          > 
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            <span>Изменить</span>
-          </Button>
-        </DialogFooter>
+            <DialogFooter>
+              <Button
+                disabled={isLoading || !form.formState.isValid}
+                type="submit"
+              > 
+                {isLoading && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                <span>Изменить</span>
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )
