@@ -133,9 +133,7 @@ export default function EditTransport({
   useEffect(() => {
     fetchColors();
     fetchCategories();
-  }, [showEditDialog]);
 
-  useEffect(() => {
     setName(post.name);
     setColorId(String(post.colorId));
     setCategoryId(String(post.categoryId));
@@ -145,7 +143,7 @@ export default function EditTransport({
 
   return (
     <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold">Изменение транспорта</DialogTitle>
           <DialogDescription>
@@ -159,7 +157,7 @@ export default function EditTransport({
               src={image}
               alt="transport-image"
               loading="lazy"
-              className="inset-0 object-cover rounded"
+              className="inset-0 object-cover rounded border"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             <Input 
