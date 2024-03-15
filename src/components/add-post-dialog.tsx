@@ -103,7 +103,8 @@ export default function AddTransport({ variant = "default" }: { variant?: "outli
 
   const form = useForm<z.infer<typeof postCreateSchema>>({
     resolver: zodResolver(postCreateSchema),
-    defaultValues: DEFAULT_VALUES
+    defaultValues: DEFAULT_VALUES,
+    mode: "onChange"
   });
 
   useEffect(() => {
@@ -136,10 +137,7 @@ export default function AddTransport({ variant = "default" }: { variant?: "outli
 
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-2"
-          > 
+          <form className="space-y-2"> 
             <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
@@ -226,35 +224,34 @@ export default function AddTransport({ variant = "default" }: { variant?: "outli
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Картинка</FormLabel>
-                    <Input
-                      type="file"
-                      accept="image/jpeg, image/png"
-                      onChange={(e) => {
-                        formatImage(e, setImage);
-                        field.onChange(String(e.target.files))
-                      }}
-                    />
-                  <FormControl>
-                  </FormControl>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/jpeg, image/png"
+                        onChange={(e) => {
+                          formatImage(e, setImage);
+                          field.onChange(String(e.target.files))
+                        }}
+                      />
+                    </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <DialogFooter>
-              <Button
-                disabled={isLoading || !form.formState.isValid}
-                type="submit"
-              >
-                {isLoading && (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                <span>Добавить</span>
-              </Button>
-            </DialogFooter>
           </form>
         </Form>
-
+        <DialogFooter>
+          <Button
+            disabled={isLoading || !form.formState.isValid}
+            onClick={form.handleSubmit(onSubmit)}
+            type="submit"
+          >
+            {isLoading && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            <span>Добавить</span>
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

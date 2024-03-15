@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import SelectFilter from "@/components/select";
 
-import { postSchema } from "@/lib/validation/post";
+import { postUpdateSchema } from "@/lib/validation/post";
 import { FilterItem, Transport } from "@/types";
 
 import { useEffect, useState } from "react";
@@ -138,7 +138,7 @@ export default function EditTransport({
     }
   }
 
-  const onSubmit = async(values: z.infer<typeof postSchema>) => {
+  const onSubmit = async(values: z.infer<typeof postUpdateSchema>) => {
     const { name, plate } = values;
 
     setIsLoading(true);
@@ -156,12 +156,13 @@ export default function EditTransport({
     setShowEditDialog(false);
   };
 
-  const form = useForm<z.infer<typeof postSchema>>({
-    resolver: zodResolver(postSchema),
+  const form = useForm<z.infer<typeof postUpdateSchema>>({
+    resolver: zodResolver(postUpdateSchema),
     defaultValues: {
       name: post.name,
       plate: post.plate,
-    }
+    },
+    mode: "onChange"
   });
 
   useEffect(() => {
@@ -213,10 +214,7 @@ export default function EditTransport({
           />
         </div>
         <Form {...form}>
-          <form 
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-2"
-          >
+          <form className="space-y-2">
             <FormField
               control={form.control}
               name="name"
@@ -250,20 +248,20 @@ export default function EditTransport({
                 </FormItem>
               )}
             />
-
-            <DialogFooter>
-              <Button
-                disabled={isLoading || !form.formState.isValid}
-                type="submit"
-              > 
-                {isLoading && (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                <span>Изменить</span>
-              </Button>
-            </DialogFooter>
           </form>
         </Form>
+        <DialogFooter>
+          <Button
+            disabled={isLoading || !form.formState.isValid}
+            onClick={form.handleSubmit(onSubmit)}
+            type="submit"
+          > 
+            {isLoading && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            <span>Изменить</span>
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
