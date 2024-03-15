@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SelectFilter from "@/components/select";
 import { Icons } from "@/components/icons";
+import { toast } from "@/components/ui/use-toast";
 
 import { postCreateSchema } from "@/lib/validation/post";
 import { FilterItem } from "@/types";
@@ -64,10 +65,18 @@ async function createPost(
   });
 
   if(!response?.ok) {
-    console.error("Something went wrong when create post", response);
+    toast({
+      title: "Произошла ошибка",
+      description: "Не удалось создать новый пост. Попробуйте снова.",
+      variant: "destructive"
+    });
     return false;
   }
-  
+
+  toast({
+    title: "Успешно",
+    description: "Новый транспорт был успешно добавлен",
+  });
   return true;
 }
 

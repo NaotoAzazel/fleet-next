@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import SelectFilter from "@/components/select";
+import { toast } from "@/components/ui/use-toast";
 
 import { postUpdateSchema } from "@/lib/validation/post";
 import { FilterItem, Transport } from "@/types";
@@ -56,10 +57,18 @@ export async function updatePost(
   });
 
   if(!response?.ok) {
-    console.error("Something went wrong when update post", response);
+    toast({
+      title: "Произошла ошибка",
+      description: "Не удалось обновить пост. Попробуйте снова.",
+      variant: "destructive"
+    });
     return false;
   }
   
+  toast({
+    title: "Успешно",
+    description: `${name} был успешно обновлен`,
+  });
   return true;
 }
 
