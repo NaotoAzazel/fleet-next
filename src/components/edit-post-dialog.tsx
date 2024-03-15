@@ -30,6 +30,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { formatImage } from "@/lib/utils";
+import { fetchCategories, fetchColors } from "@/lib/posts";
 
 export async function updatePost(
   postId: number,
@@ -80,64 +82,6 @@ export default function EditTransport({
   const [categoryId, setCategoryId] = useState<string>("");
   const [image, setImage] = useState<any>();
 
-  const fetchColors = async() => {
-    try {
-      const response = await fetch("/api/posts/colors");
-      const data = await response.json();
-      setColors(data as FilterItem[]);
-    } catch(err) {
-      console.error(err);
-    }
-  }
-
-  const fetchCategories = async() => {
-    try {
-      const response = await fetch("/api/posts/categories");
-      const data = await response.json();
-      setCategories(data as FilterItem[]);
-    } catch(err) {
-      console.error(err);
-    }
-  }
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-
-      // crope image for 800x600 resolution
-      reader.onloadend = async () => {
-        const img = new Image();
-        img.onload = () => {
-          const aspectRatio = img.width / img.height;
-          let width, height;
-  
-          if (aspectRatio > 800 / 600) {
-            width = 800;
-            height = Math.round(800 / aspectRatio);
-          } else {
-            width = Math.round(600 * aspectRatio);
-            height = 600;
-          }
-  
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-  
-          const ctx = canvas.getContext("2d");
-          ctx!.drawImage(img, 0, 0, img.width, img.height, 0, 0, width, height);
-  
-          const resizedImage = canvas.toDataURL("image/jpeg", 0.8);
-          setImage(resizedImage);
-        };
-  
-        img.src = reader.result as string;
-      };
-  
-      reader.readAsDataURL(file);
-    }
-  }
-
   const onSubmit = async(values: z.infer<typeof postUpdateSchema>) => {
     const { name, plate } = values;
 
@@ -166,12 +110,20 @@ export default function EditTransport({
   });
 
   useEffect(() => {
-    fetchColors();
-    fetchCategories();
+    const fetchData = async() => {
+      const colors = await fetchColors();
+      const categories = await fetchCategories();
+
+      setColors(colors);
+      setCategories(categories);
+    }
 
     setColorId(String(post.colorId));
     setCategoryId(String(post.categoryId));
     setImage(post.image);
+
+    fetchData();
+    form.reset();
   }, [showEditDialog]);
 
   return (
@@ -195,7 +147,7 @@ export default function EditTransport({
           <Input 
             type="file"
             accept="image/jpeg, image/png"
-            onChange={(e) => handleFileUpload(e)} 
+            onChange={(e) => formatImage(e, setImage)} 
           />
         </div>
 
