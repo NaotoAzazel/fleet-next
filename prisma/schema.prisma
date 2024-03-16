@@ -23,13 +23,19 @@ model Transport {
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
   transports Transport[]
 }
 
 model Color {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
   transports Transport[]
+}
+
+model Activity {
+  id         Int      @id @default(autoincrement())
+  username   String
+  createdAt  DateTime @default(now())
 }
