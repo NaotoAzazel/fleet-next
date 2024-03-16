@@ -3,6 +3,8 @@ import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import Header from "@/components/header";
 import DashboardPagination from "@/components/pagination";
 import PostItem from "@/components/post-item";
+import DashboardShell from "@/components/shell";
+
 import { getPostsByParams } from "@/lib/posts";
 
 /** TODOL Fix when remove the last post from the page, pageQuery 
@@ -21,7 +23,7 @@ export default async function TranportPage({
   const { data: posts, metadata } = await getPostsByParams(undefined, "asc", "all", take, skip);
 
   return (
-    <div className="grid items-start gap-4">
+    <DashboardShell>
       <Header 
         heading="Доступный транспорт"
         text={metadata.totalRecords > 0
@@ -51,6 +53,6 @@ export default async function TranportPage({
           <AddTransport variant="outline" />
         </EmptyPlaceholder>
       )}  
-    </div>
+    </DashboardShell>
   )
 }
