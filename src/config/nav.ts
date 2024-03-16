@@ -8,7 +8,7 @@ export const navbarConfig: NavbarConfig = {
     },
     {
       title: "Список транспорта",
-      href: "transport"
+      href: "/transport"
     }
   ]
 }
