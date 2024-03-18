@@ -5,7 +5,7 @@ export default function StatisticItem({
   actions,
   createdAt
 }: {
-  username: string,
+  username: string | null,
   actions: number,
   createdAt: Date | null
 }) {
@@ -13,7 +13,7 @@ export default function StatisticItem({
     <div className="flex items-center">
       <div className="space-y-1">
         <p className="text-sm font-medium leading-none">
-          {username}
+          {username || "Некорректно имя"}
         </p>
         <p className="text-sm text-muted-foreground">
           {formatDate(createdAt?.toDateString() || "Дату не найдено")}

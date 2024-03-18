@@ -107,7 +107,7 @@ export default async function DashboardPage() {
               {activities.activities.map((activity, i) => (
                 <StatisticItem 
                   key={i}
-                  username={activity.username}
+                  username={activity._max.username}
                   actions={activity._count}
                   createdAt={activity._max.createdAt} 
                 />

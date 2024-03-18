@@ -35,7 +35,8 @@ model Color {
 }
 
 model Activity {
-  id         Int      @id @default(autoincrement())
-  username   String
-  createdAt  DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  username    String
+  providerId  String 
+  createdAt   DateTime @default(now())
 }

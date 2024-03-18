@@ -2,10 +2,11 @@ import { db } from "@/lib/prisma";
 
 type Activity = {
   _max: {
+    username: string | null;
     createdAt: Date | null;
   };
   _count: number;
-  username: string;
+  providerId: string;
 };
 
 interface Activities {
@@ -15,7 +16,7 @@ interface Activities {
 
 export async function getActivities(): Promise<Activities> {
   const activities = await db.activity.groupBy({
-    by: ["username"],
+    by: "providerId",
     _count: true,
     orderBy: {
       _count: {
@@ -23,13 +24,16 @@ export async function getActivities(): Promise<Activities> {
       },
     },
     _max: {
+      username: true,
       createdAt: true
     },
     skip: 0,
     take: 5
   });
 
-  const totalCount = await db.activity.count();
+  const totalCount = await db.activity.groupBy({
+    by: "providerId"
+  }).then((res) => res.length);
 
   return { totalCount, activities };
 }

@@ -18,7 +18,8 @@ export async function DELETE(
     const { params } = routeContextSchema.parse(context);
 
     const user = await currentUser();
-    const isAdmin = verifyCurrentUserIsAdmin(user?.user?.user_metadata.provider_id);
+    const userMeatadata = user?.user.user_metadata;
+    const isAdmin = verifyCurrentUserIsAdmin(userMeatadata.provider_id);
 
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
@@ -28,6 +29,17 @@ export async function DELETE(
       where: {
         id: Number(params.postId)
       }
+    });
+    
+    const username = (userMeatadata.name).slice(0, userMeatadata.name.length - 2); // slice #0 after nick (naotoazazel#0)
+    const providerId = userMeatadata.provider_id;
+
+    await db.activity.create({
+      data: {
+        username,
+        providerId
+      },
+      select: { id: true }
     });
 
     return new NextResponse(null, { status: 200 });
@@ -44,28 +56,48 @@ export async function PUT(
   req: Request,
   context: z.infer<typeof routeContextSchema>
 ) {
-  const { params } = routeContextSchema.parse(context);
-  const json = await req.json();
-  const body = postPatchSchema.parse(json);
-
-  const user = await currentUser();
-  const isAdmin = verifyCurrentUserIsAdmin(user?.user?.user_metadata.provider_id);
-  if(!isAdmin) {
-    return new NextResponse(null, { status: 403 });
-  }
-
-  await db.transport.update({
-    where: {
-      id: Number(params.postId)
-    },
-    data: {
-      name: body.name, 
-      colorId: body.colorId, 
-      categoryId: body.categoryId, 
-      plate: body.plate, 
-      image: body.image
+  try {
+    const { params } = routeContextSchema.parse(context);
+    const json = await req.json();
+    const body = postPatchSchema.parse(json);
+  
+    const user = await currentUser();
+    const userMeatadata = user?.user.user_metadata;
+    const isAdmin = verifyCurrentUserIsAdmin(userMeatadata.provider_id);
+    if(!isAdmin) {
+      return new NextResponse(null, { status: 403 });
     }
-  });
+  
+    await db.transport.update({
+      where: {
+        id: Number(params.postId)
+      },
+      data: {
+        name: body.name, 
+        colorId: body.colorId, 
+        categoryId: body.categoryId, 
+        plate: body.plate, 
+        image: body.image
+      }
+    });
 
-  return new NextResponse(null, { status: 200 });
+    const username = (userMeatadata.name).slice(0, userMeatadata.name.length - 2); // slice #0 after nick (naotoazazel#0)
+    const providerId = userMeatadata.provider_id;
+
+    await db.activity.create({
+      data: {
+        username,
+        providerId
+      },
+      select: { id: true }
+    });
+  
+    return new NextResponse(null, { status: 200 });
+  } catch(error) {
+    if (error instanceof z.ZodError) {
+      return new NextResponse(JSON.stringify(error.issues), { status: 422 })
+    }
+
+    return new NextResponse(null, { status: 500 })
+  }
 }
