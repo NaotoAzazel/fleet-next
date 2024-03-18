@@ -57,11 +57,15 @@ export async function middleware(request: NextRequest) {
 
   const { data } = await supabase.auth.getSession();
   const url = new URL(request.url);
+  const isAuthPage = url.pathname.startsWith("/login");
+  const isAuth = !!data.session;
 
-  // TODO: make right redirect to /auth with "?error" query param
-  // that will be displayed on auth page above buttons with login
-  if(!data.session && protectedPath.includes(url.pathname)) {
+  if(isAuthPage && isAuth) {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if(!isAuth && protectedPath.includes(url.pathname)) {
+    return NextResponse.redirect(new URL("/login?auth-required=true", request.url));
   }
 
   if(
@@ -75,5 +79,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/transport:path", "/dashboard/:path*"],
+  matcher: ["/transport:path", "/dashboard/:path*", "/login"],
 };

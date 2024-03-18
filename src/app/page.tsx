@@ -21,7 +21,7 @@ export default function Home() {
 
             <div className="flex gap-4">
               <Link 
-                href="/auth" 
+                href="/login" 
                 className={buttonVariants()}
               >
                 Авторизация
