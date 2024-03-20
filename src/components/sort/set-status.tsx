@@ -22,8 +22,8 @@ export default function SetStatus() {
   const handleClick = useCallback(
     (selectedValue: string) => {
       let params = new URLSearchParams(window.location.search);
-      if(selectedValue.length) params.set("s", selectedValue);
-      else params.delete("s");
+      if(selectedValue.length) params.set("status", selectedValue);
+      else params.delete("status");
 
       startTransition(() => {
         router.replace(`${pathname}?${params.toString()}`);
@@ -33,7 +33,7 @@ export default function SetStatus() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const statusQuery = params.get("s") ?? "";
+    const statusQuery = params.get("status") ?? "";
 
     const isValid = statusParams.find(param => param.value === statusQuery);
     setValue(isValid ? statusQuery : "");

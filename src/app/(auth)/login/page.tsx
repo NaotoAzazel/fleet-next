@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { signIn } from "next-auth/react";
 
-import * as z from "zod";
-
-const authPageSchema = z.object({
-  "auth-required": z.coerce.boolean().optional()
-});
-
-type AuthPageParams = z.infer<typeof authPageSchema>;
+import { AuthPageParams, authPageSchema } from "@/lib/validation/pages";
 
 export default function AuthPage({
   searchParams

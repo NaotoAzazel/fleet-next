@@ -2,35 +2,28 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import Header from "@/components/header";
 import Filter from "@/components/filter";
 import ProductCard from "@/components/product-card";
+
 import { Transport } from "@/types";
+
 import { getPostsByParams } from "@/lib/posts";
-import { sortParams, statusParams } from "@/config/filter-options";
+import { TransportPageSchema, transportPageSchema } from "@/lib/validation/pages";
 
 export default async function TransportPage({ 
   searchParams 
 }: { 
-  searchParams: { search?: string, sort?: string, s?: string }
+  searchParams: TransportPageSchema
 }) {
   let posts: Transport[] = [];
-  const searchQuery = searchParams.search ?? "";
-  let statusQuery = searchParams.s as "avai" | "unavai" | "all" ?? "all";
-  let sortQuery = searchParams.sort as "asc" | "desc" ?? "asc";
-
-  const isValidStatus = statusParams.find(param => param.value === statusQuery);
-  const isValidSort = sortParams.find(param => param.value === sortQuery);
-  
-  if(!isValidStatus) {
-    statusQuery = "all";
-  }
-
-  if(!isValidSort) {
-    sortQuery = "asc";
-  }
+  const { search, sort, status } = transportPageSchema.parse({
+    search: searchParams.search,
+    status: searchParams.status,
+    sort: searchParams.sort
+  });
 
   const { data: initialPosts } = await getPostsByParams();
-  const { data: filteredPosts } = await getPostsByParams(searchQuery, sortQuery, statusQuery);
+  const { data: filteredPosts } = await getPostsByParams(search, sort, status);
 
-  if (searchQuery.length || statusQuery.length > 3 || sortQuery.length > 3) {
+  if (search.length || status.length > 3 || sort.length > 3) {
     if (filteredPosts) {
       posts = filteredPosts;
     } else posts = [];
