@@ -1,12 +1,18 @@
-import { currentUser, verifyCurrentUserIsAdmin } from "@/lib/auth";
+import { authOptions, verifyCurrentUserIsAdmin } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 
+// TODO: change return value to 
+// activity: { Январь: 1, Февраль: 44, ... }
 export async function GET() {
   try {
-    const user = await currentUser();
-    const isAdmin = verifyCurrentUserIsAdmin(user?.user?.user_metadata.provider_id);
+    const user = await getServerSession(authOptions);
+    if(!user) {
+      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
+    }
 
+    const isAdmin = verifyCurrentUserIsAdmin(user.user.id);
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
     }

@@ -1,7 +1,10 @@
-import { currentUser, verifyCurrentUserIsAdmin } from "@/lib/auth";
+import { authOptions, verifyCurrentUserIsAdmin } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+
 import { db } from "@/lib/prisma";
-import { NextResponse } from "next/server";
 import { postPatchSchema } from "@/lib/validation/post";
+
+import { NextResponse } from "next/server";
 import * as z from "zod";
 
 const routeContextSchema = z.object({
@@ -17,10 +20,12 @@ export async function DELETE(
   try {
     const { params } = routeContextSchema.parse(context);
 
-    const user = await currentUser();
-    const userMeatadata = user?.user.user_metadata;
-    const isAdmin = verifyCurrentUserIsAdmin(userMeatadata.provider_id);
-
+    const user = await getServerSession(authOptions);
+    if(!user) {
+      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
+    }
+    
+    const isAdmin = verifyCurrentUserIsAdmin(user.user.id);
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
     }
@@ -30,14 +35,11 @@ export async function DELETE(
         id: Number(params.postId)
       }
     });
-    
-    const username = (userMeatadata.name).slice(0, userMeatadata.name.length - 2); // slice #0 after nick (naotoazazel#0)
-    const providerId = userMeatadata.provider_id;
 
     await db.activity.create({
       data: {
-        username,
-        providerId
+        username: user.user.name,
+        providerId: user.user.id
       },
       select: { id: true }
     });
@@ -61,9 +63,12 @@ export async function PUT(
     const json = await req.json();
     const body = postPatchSchema.parse(json);
   
-    const user = await currentUser();
-    const userMeatadata = user?.user.user_metadata;
-    const isAdmin = verifyCurrentUserIsAdmin(userMeatadata.provider_id);
+    const user = await getServerSession(authOptions);
+    if(!user) {
+      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
+    }
+    
+    const isAdmin = verifyCurrentUserIsAdmin(user.user.id);
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
     }
@@ -81,13 +86,10 @@ export async function PUT(
       }
     });
 
-    const username = (userMeatadata.name).slice(0, userMeatadata.name.length - 2); // slice #0 after nick (naotoazazel#0)
-    const providerId = userMeatadata.provider_id;
-
     await db.activity.create({
       data: {
-        username,
-        providerId
+        username: user.user.name,
+        providerId: user.user.id
       },
       select: { id: true }
     });

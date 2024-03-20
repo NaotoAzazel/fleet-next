@@ -1,20 +1,19 @@
-"use client"
-
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import ProfileMenu from "@/components/profile-menu";
 
-import useUser from "@/hook/useUser";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 import Link from "next/link";
 
-export default function AuthButton() {
-  const { isFetching, data: user } = useUser();
+export default async function AuthButton() {
+  const session = await getServerSession(authOptions);
 
   return (
     <>
-      {user && !isFetching ? (
-        <ProfileMenu user={user}/>
+      {session ? (
+        <ProfileMenu user={session.user} />
       ) : (
         <Link 
           href="/login"

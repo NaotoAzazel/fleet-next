@@ -1,18 +1,23 @@
-import { currentUser, verifyCurrentUserIsAdmin } from "@/lib/auth";
+import { authOptions, verifyCurrentUserIsAdmin } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+
 import { db } from "@/lib/prisma";
 import { postCreateSchema } from "@/lib/validation/post";
-import { NextResponse } from "next/server";
 
-export async function POST(
-  req: Request
-) {
+import { NextResponse } from "next/server";
+import * as z from "zod";
+
+export async function POST(req: Request) {
   try {
     const json = await req.json();
     const body = postCreateSchema.parse(json);
   
-    const user = await currentUser();
-    const userMeatadata = user?.user.user_metadata;
-    const isAdmin = verifyCurrentUserIsAdmin(userMeatadata.provider_id);
+    const user = await getServerSession(authOptions);
+    if(!user) {
+      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
+    }
+
+    const isAdmin = verifyCurrentUserIsAdmin(user.user.id);
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
     }
@@ -28,20 +33,21 @@ export async function POST(
       },
       select: { id: true }
     });
-
-    const username = (userMeatadata.name).slice(0, userMeatadata.name.length - 2); // slice #0 after nick (naotoazazel#0)
-    const providerId = userMeatadata.provider_id;
   
     await db.activity.create({
       data: {
-        username,
-        providerId
+        username: user.user.name,
+        providerId: user.user.id
       },
       select: { id: true }
     });
   
     return new NextResponse(null, { status: 200 });
   } catch(error) {
-    return new NextResponse(null, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return new NextResponse(JSON.stringify(error.issues), { status: 422 })
+    }
+
+    return new NextResponse(null, { status: 500 })
   }
 }

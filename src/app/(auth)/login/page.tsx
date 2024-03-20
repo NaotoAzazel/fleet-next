@@ -1,11 +1,12 @@
 "use client"
 
-import { supabaseBrowser } from "@/lib/supabase/browser";
-import * as z from "zod";
-
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+
+import { signIn } from "next-auth/react";
+
+import * as z from "zod";
 
 const authPageSchema = z.object({
   "auth-required": z.coerce.boolean().optional()
@@ -19,17 +20,6 @@ export default function AuthPage({
   searchParams: AuthPageParams
 }) {
   const isAuthRequired = authPageSchema.parse(searchParams);
-
-  const supabase = supabaseBrowser();
-
-  const handleLoginWithDiscord = () => {
-    supabase.auth.signInWithOAuth({
-      provider: "discord",
-      options: {
-        redirectTo: location.origin + "/auth/callback",
-      },
-    });
-  };
 
   return (
     <MaxWidthWrapper className="flex h-screen">
@@ -54,7 +44,7 @@ export default function AuthPage({
         </div>
 
         <Button
-          onClick={handleLoginWithDiscord}
+          onClick={() => signIn("discord")}
         >
           <Icons.logIn className="h-5 w-5 mr-2" />
           <span>Авторизация через Дискорд</span>
