@@ -18,11 +18,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { Transport } from "@/types";
 import { Icons } from "@/components/icons";
+import EditTransport from "@/components/edit-post-dialog";
+import { toast } from "@/components/ui/use-toast";
+
+import { Transport } from "@/types";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import EditTransport from "./edit-post-dialog";
 
 export async function deletePost(postId: number) {
   const response = await fetch(`/api/posts/${postId}`, {
@@ -30,9 +33,18 @@ export async function deletePost(postId: number) {
   });
 
   if(!response?.ok) {
-    return console.error("Something went wrong while delete post");
+    toast({
+      title: "Произошла ошибка",
+      description: "Не удалось удалить этот транспорт. Попробуйте снова.",
+      variant: "destructive"
+    });
+    return false;
   }
 
+  toast({
+    title: "Успешно",
+    description: "Этот транспорт был успешно удален.",
+  });
   return true;
 }
 
