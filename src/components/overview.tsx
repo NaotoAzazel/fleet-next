@@ -8,7 +8,8 @@ import {
   YAxis,
   Bar
 } from "recharts";
-import { Icons } from "@/components/icons";
+
+import Loading from "@/components/loading";
 
 const monthNames = [
   "Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
@@ -43,10 +44,7 @@ export default function BarChar() {
   return (
     <>
       {isLoading ? (
-        <div className="inline-flex items-center justify-center w-full text-muted-foreground p-40">
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          <p>Загрузка...</p>
-        </div>
+        <Loading className="w-full p-40" />
       ): (
         <ResponsiveContainer width="100%" height={350}>
           <BarGraph data={data}>

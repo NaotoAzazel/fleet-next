@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import SelectFilter from "@/components/select";
 import { toast } from "@/components/ui/use-toast";
+import Loading from "@/components/loading";
 
 import { postUpdateSchema } from "@/lib/validation/post";
 import { FilterItem, Transport } from "@/types";
@@ -88,6 +89,7 @@ export default function EditTransport({
   const [colors, setColors] = useState<FilterItem[]>([]);
   const [categories, setCategories] = useState<FilterItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDataLoading, setIsDataLoading] = useState<boolean>(false);
 
   const [colorId, setColorId] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
@@ -122,6 +124,8 @@ export default function EditTransport({
 
   useEffect(() => {
     const fetchFilters = async(showDialog: boolean) => {
+      setIsDataLoading(true);
+      
       if(showDialog) {
         const colors = await fetchData("colors");
         const categories = await fetchData("categories");
@@ -129,6 +133,8 @@ export default function EditTransport({
         setColors(colors);
         setCategories(categories);
       }
+
+      setIsDataLoading(false);
     }
 
     setColorId(String(post.colorId));
@@ -145,88 +151,94 @@ export default function EditTransport({
         <DialogHeader>
           <DialogTitle className="font-heading font-bold">Изменение транспорта</DialogTitle>
           <DialogDescription>
-            Сейчас вы кастомизируете {post.name}
+            Сейчас вы кастомизируете {isDataLoading ? "Загрузка..." : post.name}
           </DialogDescription>
         </DialogHeader>
+        {isDataLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className="space-y-2">
+              <img
+                src={image}
+                alt="transport-image"
+                loading="lazy"
+                className="inset-0 object-cover rounded border"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+              <Input 
+                type="file"
+                accept="image/jpeg, image/png"
+                onChange={(e) => formatImage(e, setImage)} 
+              />
+            </div>
 
-        <div className="space-y-2">
-          <img
-            src={image}
-            alt="transport-image"
-            loading="lazy"
-            className="inset-0 object-cover rounded border"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          <Input 
-            type="file"
-            accept="image/jpeg, image/png"
-            onChange={(e) => formatImage(e, setImage)} 
-          />
-        </div>
+            <div className="flex gap-2">
+              <SelectFilter 
+                placeholder="Цвет" 
+                items={colors} 
+                value={colorId}
+                onValueChange={setColorId}
+              />
+              <SelectFilter 
+                placeholder="Категория" 
+                items={categories}
+                value={categoryId}
+                onValueChange={setCategoryId}
+              />
+            </div>
+            <Form {...form}>
+              <form className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Название</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Ламборгини"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        <div className="flex gap-2">
-          <SelectFilter 
-            placeholder="Цвет" 
-            items={colors} 
-            value={colorId}
-            onValueChange={setColorId}
-          />
-          <SelectFilter 
-            placeholder="Категория" 
-            items={categories}
-            value={categoryId}
-            onValueChange={setCategoryId}
-          />
-        </div>
-        <Form {...form}>
-          <form className="space-y-2">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Название</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Ламборгини"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="plate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Номера</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="A1235B"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+            <DialogFooter>
+              <Button
+                disabled={isLoading || !form.formState.isValid}
+                onClick={form.handleSubmit(onSubmit)}
+                type="submit"
+              > 
+                {isLoading && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                <span>Изменить</span>
+              </Button>
+            </DialogFooter>
+          </>
+        )}
 
-            <FormField
-              control={form.control}
-              name="plate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Номера</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="A1235B"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-        <DialogFooter>
-          <Button
-            disabled={isLoading || !form.formState.isValid}
-            onClick={form.handleSubmit(onSubmit)}
-            type="submit"
-          > 
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            <span>Изменить</span>
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
