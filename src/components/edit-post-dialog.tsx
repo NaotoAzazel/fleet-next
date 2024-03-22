@@ -29,10 +29,12 @@ import { FilterItem, Transport } from "@/types";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+
 import { formatImage } from "@/lib/utils";
-import { fetchCategories, fetchColors } from "@/lib/posts";
+import { fetchData } from "@/lib/posts";
 
 export async function updatePost(
   postId: number,
@@ -119,19 +121,21 @@ export default function EditTransport({
   });
 
   useEffect(() => {
-    const fetchData = async() => {
-      const colors = await fetchColors();
-      const categories = await fetchCategories();
-
-      setColors(colors);
-      setCategories(categories);
+    const fetchFilters = async(showDialog: boolean) => {
+      if(showDialog) {
+        const colors = await fetchData("colors");
+        const categories = await fetchData("categories");
+  
+        setColors(colors);
+        setCategories(categories);
+      }
     }
 
     setColorId(String(post.colorId));
     setCategoryId(String(post.categoryId));
     setImage(post.image);
 
-    fetchData();
+    fetchFilters(showEditDialog);
     form.reset();
   }, [showEditDialog]);
 

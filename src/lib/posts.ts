@@ -61,15 +61,10 @@ export async function getCategories(): Promise<FilterItem[]> {
   return await db.category.findMany();
 }
 
-export async function fetchColors(): Promise<FilterItem[]> {
-  const response = await fetch("/api/posts/colors");
-  const data = await response.json();
-
-  return data as FilterItem[];
-}
-
-export async function fetchCategories():Promise<FilterItem[]> {
-  const response = await fetch("/api/posts/categories");
+export async function fetchData(
+  filterType: "colors" | "categories"
+): Promise<FilterItem[]> {
+  const response = await fetch(`/api/posts/${filterType}`);
   const data = await response.json();
   return data as FilterItem[];
 }

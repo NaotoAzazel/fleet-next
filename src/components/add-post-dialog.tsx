@@ -28,12 +28,14 @@ import { postCreateSchema } from "@/lib/validation/post";
 import { FilterItem } from "@/types";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+
 import { formatImage } from "@/lib/utils";
-import { fetchCategories, fetchColors } from "@/lib/posts";
+import { fetchData } from "@/lib/posts";
 
 const DEFAULT_VALUES = {
   name: "",
@@ -117,17 +119,20 @@ export default function AddTransport({ variant = "default" }: { variant?: "outli
   });
 
   useEffect(() => {
-    const fetchData = async() => {
-      const colors = await fetchColors();
-      const categories = await fetchCategories();
-
-      setColors(colors);
-      setCategories(categories);
+    const fetchFilters = async(showDialog: boolean) => {
+      if(showDialog) {
+        const colors = await fetchData("colors");
+        const categories = await fetchData("categories");
+  
+        setColors(colors);
+        setCategories(categories);
+      }
     }
 
     setColorId("")
     setCategoryId("");
-    fetchData();
+
+    fetchFilters(showDialog);
     form.reset();
   }, [showDialog]);
 
