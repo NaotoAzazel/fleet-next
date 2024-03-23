@@ -1,5 +1,5 @@
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import Header from "@/components/header";
+import { Header } from "@/components/header";
 import Filter from "@/components/filter";
 import ProductCard from "@/components/product-card";
 
