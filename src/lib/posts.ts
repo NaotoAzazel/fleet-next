@@ -1,4 +1,4 @@
-import { FilterItem, Transport } from "@/types";
+import { FilterItem, FilterType, Transport } from "@/types";
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/prisma";
 
@@ -62,7 +62,7 @@ export async function getCategories(): Promise<FilterItem[]> {
 }
 
 export async function fetchData(
-  filterType: "colors" | "categories"
+  filterType: FilterType
 ): Promise<FilterItem[]> {
   const response = await fetch(`/api/posts/${filterType}`);
   const data = await response.json();

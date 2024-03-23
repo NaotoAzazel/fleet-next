@@ -58,3 +58,5 @@ export type FilterItem = {
   id: number;
   name: string;
 }
+
+export type FilterType = "colors" | "categories";
