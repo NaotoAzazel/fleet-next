@@ -1,26 +1,20 @@
 import { StatisticCard } from "@/components/statistic-card";
-import { Icons } from "@/components/icons";
-import Header from "@/components/header";
-import StatisticItem from "@/components/activity-leaders";
+import { StatisticItem } from "@/components/activity-leaders";
 import BarChar from "@/components/overview";
+
+import { Icons } from "@/components/icons";
+
+import { Header } from "@/components/header";
 import DashboardShell from "@/components/shell";
+import { EmptyPlaceholder } from "@/components/empty-placeholder";
 
 import { getActivities, getStatistics } from "@/lib/analytics";
-import { EmptyPlaceholder } from "@/components/empty-placeholder";
 
 type CardData = {
   label: string;
   amount: number;
-  icon: keyof typeof Icons
-}
-
-function generateStatisticFields(
-  transport: CardData, 
-  color: CardData, 
-  category: CardData
-): CardData[] {
-  return [transport, color, category];
-}
+  icon: keyof typeof Icons;
+};
 
 export default async function DashboardPage() {
   const activities = await getActivities();
@@ -28,25 +22,23 @@ export default async function DashboardPage() {
     categoryCount, colorCount, transportCount 
   } = await getStatistics();
 
-  const transport: CardData = {
-    label: "Всего транспорта",
-    amount: transportCount,
-    icon: "car"
-  };
-
-  const colors: CardData = {
-    label: "Всего цветов",
-    amount: colorCount,
-    icon: "color",
-  };
-
-  const categories: CardData = {
-    label: "Всего категорий",
-    amount: categoryCount,
-    icon: "category"
-  };
-
-  const generatedFields = generateStatisticFields(transport, colors, categories);
+  const cardData: CardData[] = [
+    {
+      label: "Всего транспорта",
+      amount: transportCount,
+      icon: "car"
+    },
+    {
+      label: "Всего цветов",
+      amount: colorCount,
+      icon: "color",
+    },
+    {
+      label: "Всего категорий",
+      amount: categoryCount,
+      icon: "category"
+    }
+  ];
 
   return (
     <DashboardShell>
@@ -55,7 +47,7 @@ export default async function DashboardPage() {
       <div className="grid w-full grid-cols-1 gap-4 transition-all
         md:grid-cols-2 xl:grid-cols-3"
       >
-        {generatedFields.map((data, i) => (
+        {cardData.map((data, i) => (
           <StatisticCard key={i}>
             <StatisticCard.Section
               className="flex flex-row items-center justify-between space-y-0"
