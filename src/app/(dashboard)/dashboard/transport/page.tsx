@@ -1,16 +1,13 @@
 import AddTransport from "@/components/add-post-dialog";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import Header from "@/components/header";
-import DashboardPagination from "@/components/pagination";
-import PostItem from "@/components/post-item";
+import { PostItem } from "@/components/post-item";
+
+import { Header } from "@/components/header";
 import DashboardShell from "@/components/shell";
+import DashboardPagination from "@/components/pagination";
 
 import { getPostsByParams } from "@/lib/posts";
-
-/** TODOL Fix when remove the last post from the page, pageQuery 
- *  remains the same value and there are posts, but since 
- * were trying to load a page that doesnt exist, its loading ?page=pageNumber 
- * */
+import { redirect } from 'next/navigation'
 
 export default async function TranportPage({
   searchParams
@@ -21,6 +18,9 @@ export default async function TranportPage({
   const skip = (pageNumber - 1) * take;
 
   const { data: posts, metadata } = await getPostsByParams(undefined, "asc", "all", take, skip);
+  if(pageNumber > metadata.totalPages) {
+    redirect(`/dashboard/transport?page=${metadata.totalPages}`);
+  }
 
   return (
     <DashboardShell>
