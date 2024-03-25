@@ -36,7 +36,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { formatImage } from "@/lib/utils";
+import { cn, formatImage } from "@/lib/utils";
 import { fetchData } from "@/lib/posts";
 
 export async function updatePost(
@@ -163,7 +163,9 @@ export default function EditTransport({
             <div className="space-y-2">
               <Image
                 src={image}
-                className="border rounded py-24"
+                className={cn(
+                  !post.image && "border rounded py-24"
+                )}
               />
               <Input 
                 type="file"
