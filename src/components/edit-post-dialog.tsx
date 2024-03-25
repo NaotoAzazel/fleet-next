@@ -19,10 +19,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+
 import { Icons } from "@/components/icons";
 import SelectFilter from "@/components/select";
-import { toast } from "@/components/ui/use-toast";
 import Loading from "@/components/loading";
+import { Image } from "@/components/image";
 
 import { postUpdateSchema } from "@/lib/validation/post";
 import { FilterItem, Transport } from "@/types";
@@ -159,12 +161,9 @@ export default function EditTransport({
         ) : (
           <>
             <div className="space-y-2">
-              <img
+              <Image
                 src={image}
-                alt="transport-image"
-                loading="lazy"
-                className="inset-0 object-cover rounded border"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="border rounded py-24"
               />
               <Input 
                 type="file"

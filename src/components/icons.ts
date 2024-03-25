@@ -17,7 +17,8 @@ import {
   NotepadText,
   PaintBucket,
   LibrarySquare,
-  BarChart3
+  BarChart3,
+  Image
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -40,5 +41,6 @@ export const Icons = {
   notepad: NotepadText,
   color: PaintBucket,
   category: LibrarySquare,
-  chart: BarChart3
+  chart: BarChart3,
+  image: Image
 };
