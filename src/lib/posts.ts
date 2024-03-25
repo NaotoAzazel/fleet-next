@@ -51,12 +51,54 @@ export async function getPostsByParams(
   };
 }
 
-export async function getColors(): Promise<FilterItem[]> {
-  return await db.color.findMany();
+interface Colors {
+  data: FilterItem[];
+  metadata: Metadata;
+};
+
+export async function getColorsByParams(
+  take: number = 8,
+  skip: number = 0
+): Promise<Colors> {
+  const results = await db.color.findMany({
+    take,
+    skip,
+    orderBy: { name: "asc" },
+  });
+
+  const total = await db.color.count();
+
+  return {
+    data: results,
+    metadata: {
+      totalPages: Math.ceil(total / take),
+      totalRecords: total
+    }
+  };
 }
 
-export async function getCategories(): Promise<FilterItem[]> {
-  return await db.category.findMany();
+interface Categories 
+  extends Colors {};
+
+export async function getCategoriesByParams(
+  take: number = 8,
+  skip: number = 0
+): Promise<Categories> {
+  const results = await db.category.findMany({
+    take,
+    skip,
+    orderBy: { name: "asc" },
+  });
+
+  const total = await db.category.count();
+
+  return {
+    data: results,
+    metadata: {
+      totalPages: Math.ceil(total / take),
+      totalRecords: total
+    }
+  };
 }
 
 export async function fetchData(
