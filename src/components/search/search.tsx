@@ -52,7 +52,7 @@ export default function Search() {
 
   return (
     <Input 
-      className="w-150" 
+      className="w-full" 
       type="text" 
       placeholder="Найти транспорт..."
       onChange={(e) => setInputValue(e.target.value)}

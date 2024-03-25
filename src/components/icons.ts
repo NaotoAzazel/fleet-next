@@ -9,7 +9,16 @@ import {
   UserRoundCheck,
   Sun,
   Moon,
-  Laptop
+  Laptop,
+  MoreVertical,
+  Loader2,
+  Trash,
+  Car,
+  NotepadText,
+  PaintBucket,
+  LibrarySquare,
+  BarChart3,
+  Image
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -24,5 +33,14 @@ export const Icons = {
   auth: UserRoundCheck,
   sun: Sun,
   moon: Moon,
-  laptop: Laptop
+  laptop: Laptop,
+  ellipsis: MoreVertical,
+  spinner: Loader2,
+  trash: Trash,
+  car: Car,
+  notepad: NotepadText,
+  color: PaintBucket,
+  category: LibrarySquare,
+  chart: BarChart3,
+  image: Image
 };

@@ -1,33 +1,27 @@
-"use client"
-
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { supabaseBrowser } from "@/lib/supabase/browser";
-import useUser from "@/hook/useUser";
-import ProfileMenu from "./profile-menu";
+import ProfileMenu from "@/components/profile-menu";
 
-export default function AuthButton() {
-  const supabase = supabaseBrowser();
-  const { isFetching, data: user } = useUser();
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-  const handleLoginWithDiscord = () => {
-    supabase.auth.signInWithOAuth({
-			provider: "discord",
-			options: {
-				redirectTo: location.origin + "/auth/callback",
-			},
-		});
-	};
+import Link from "next/link";
+
+export default async function AuthButton() {
+  const session = await getServerSession(authOptions);
 
   return (
     <>
-      {user && !isFetching ? (
-        <ProfileMenu user={user}/>
+      {session ? (
+        <ProfileMenu user={session.user} />
       ) : (
-        <Button variant="ghost" onClick={handleLoginWithDiscord} >
+        <Link 
+          href="/login"
+          className={buttonVariants({ variant: "ghost" })}
+        >
           <Icons.logIn className="h-5 w-5 mr-2" />
           <span>Войти</span>
-        </Button>
+        </Link>
       )}
     </>
   )

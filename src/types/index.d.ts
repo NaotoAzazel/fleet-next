@@ -25,14 +25,38 @@ export type FeatureItem = {
 
 export type FeatureCards = FeatureItem[];
 
+export type SidebarNavItem = {
+  title: string
+  disabled?: boolean
+  icon?: keyof typeof Icons
+} & (
+  | {
+      href: string
+      items?: never
+    }
+)
+
+export type DashboardConfig = {
+  sidebarNav: SidebarNavItem[]
+}
+
 export type Transport = {
   id: number;
   name: string;
   takeBy: string;
-  color: string;
+  colorId: number;
+  categoryId: number;
   plate: string;
-  category: string;
   image: string;
   createdAt: Date;
   updatedAt: Date;
+  color: Color;
+  category: Category;
 };
+
+export type FilterItem = {
+  id: number;
+  name: string;
+}
+
+export type FilterType = "colors" | "categories";
