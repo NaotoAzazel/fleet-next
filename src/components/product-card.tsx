@@ -1,20 +1,16 @@
 import { Button } from "@/components/ui/button";
+import { Image } from "@/components/image";
+
 import { Transport } from "@/types";
 
 export default function ProductCard({ post }: { post: Transport }) {
   return (
-    <div className="border border-borderColor overflow-hidden rounded-[10px]">
-      <div className="flex flex-col border-borderColor p-0">
+    <div className="border overflow-hidden rounded">
+      <div className="flex flex-col p-0">
         <div className="relative flex pb-48 inset-0">
           <div className="absolute inset-0">
-            <div className="flex w-full h-full items-center justify-center bg-secondary">
-              <img 
-                // src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds" 
-                className="absolute h-full w-full inset-0 border-borderColor object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                loading="lazy"
-                alt="text"
-              /> 
+            <div className="flex w-full h-full items-center justify-center">
+              <Image src={post.image} className="absolute h-full w-full border-b rounded-none" />
             </div>
           </div>
         </div>
