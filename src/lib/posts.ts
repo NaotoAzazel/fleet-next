@@ -6,7 +6,6 @@ type Sort = "asc" | "desc";
 type Status = "avai" | "unavai" | "all";
 
 type Metadata = {
-  hasNextPage: boolean;
   totalPages: number;
   totalRecords: number;
 };
@@ -46,7 +45,6 @@ export async function getPostsByParams(
   return {
     data: results,
     metadata: {
-      hasNextPage: skip + take < total,
       totalPages: Math.ceil(total / take),
       totalRecords: total
     }

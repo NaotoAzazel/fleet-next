@@ -7,13 +7,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 type PaginationProps = {
   page?: number;
   totalPages: number;
-  hasNextPage: boolean;
   totalRecords: number;
 };
 
