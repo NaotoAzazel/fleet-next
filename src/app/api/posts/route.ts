@@ -2,7 +2,7 @@ import { authOptions, verifyCurrentUserIsAdmin } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
 import { db } from "@/lib/prisma";
-import { postCreateSchema } from "@/lib/validation/post";
+import { postCreateRoute } from "@/lib/validation/post";
 
 import { NextResponse } from "next/server";
 import * as z from "zod";
@@ -10,7 +10,7 @@ import * as z from "zod";
 export async function POST(req: Request) {
   try {
     const json = await req.json();
-    const body = postCreateSchema.parse(json);
+    const body = postCreateRoute.parse(json);
   
     const user = await getServerSession(authOptions);
     if(!user) {
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
   
     return new NextResponse(null, { status: 200 });
   } catch(error) {
-    if (error instanceof z.ZodError) {
+    if(error instanceof z.ZodError) {
       return new NextResponse(JSON.stringify(error.issues), { status: 422 })
     }
 

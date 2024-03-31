@@ -3,10 +3,12 @@ import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import Image from "next/image";
+
 interface ImageProps 
   extends React.ImgHTMLAttributes<HTMLImageElement> {};
 
-export function Image({ 
+export function MyImage({ 
   className,
   src,
  }: ImageProps) {
@@ -24,8 +26,12 @@ export function Image({
   }
 
   return (
-    <img
-      src={src}
+    <Image
+      fill
+      src={src.startsWith("data:image/") 
+        ? src
+        : `https://ucarecdn.com/${src}/-/preview/800x600/`
+      }
       alt="Product-Image"
       loading="lazy"
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -37,10 +43,29 @@ export function Image({
   )
 }
 
+interface ImageContainerProps 
+  extends React.ImgHTMLAttributes<HTMLImageElement> {};
+
+MyImage.Container = function ImageContainer({
+  children
+}: ImageContainerProps) {
+  return (
+    <div className="flex flex-col p-0">
+      <div className="relative flex pb-48 inset-0">
+        <div className="absolute inset-0">
+          <div className="flex w-full h-full items-center justify-center absolute">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 interface ImageSkeletonProps 
   extends React.ImgHTMLAttributes<HTMLImageElement> {};
 
-Image.Skeleton = function ImageSkeleton({
+MyImage.Skeleton = function ImageSkeleton({
   className
 }: ImageSkeletonProps) {
   return (
@@ -51,7 +76,7 @@ Image.Skeleton = function ImageSkeleton({
 interface SmallImageProps 
   extends React.ImgHTMLAttributes<HTMLImageElement> {};
 
-Image.Small = function SmallImage({
+MyImage.Small = function SmallImage({
   src,
   className
 }: SmallImageProps) {
@@ -69,8 +94,12 @@ Image.Small = function SmallImage({
   }
 
   return (
-    <img
-      src={src}
+    <Image
+      width={74}
+      height={110}
+      alt="Small-image"
+      loading="lazy"
+      src={`https://ucarecdn.com/${src}/-/preview/300x220/`}
       className={cn("w-12 h-10 object-cover rounded", className)}
     />
   )
@@ -79,7 +108,7 @@ Image.Small = function SmallImage({
 interface SmallImageSkeletonProps 
   extends React.ImgHTMLAttributes<HTMLImageElement> {};
 
-Image.SmallSkeleton = function SmallImageSkeleton({
+MyImage.SmallSkeleton = function SmallImageSkeleton({
   className
 }: SmallImageSkeletonProps) {
   return (

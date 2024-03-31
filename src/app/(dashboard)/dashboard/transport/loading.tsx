@@ -1,7 +1,7 @@
 import { Header } from "@/components/header";
 import DashboardShell from "@/components/shell";
 
-import { PostItem } from "@/components/post-item";
+import { PostItem } from "./_components/post-item";
 import { Button } from "@/components/ui/button";
 
 export default function ColorPageLoading() {

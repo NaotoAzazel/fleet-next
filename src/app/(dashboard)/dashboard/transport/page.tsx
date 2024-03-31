@@ -1,13 +1,17 @@
-import AddTransport from "@/components/add-post-dialog";
+import { PostItem } from "./_components/post-item";
+import { AddTransport } from "./_components/add-transport-dialog";
+
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import { PostItem } from "@/components/post-item";
 
 import { Header } from "@/components/header";
 import DashboardShell from "@/components/shell";
 import DashboardPagination from "@/components/pagination";
 
 import { getPostsByParams } from "@/lib/posts";
-import { redirect } from 'next/navigation'
+
+export const metadata = {
+  title: "Дашборд • Транспорт"
+};
 
 export default async function TranportPage({
   searchParams
@@ -18,9 +22,6 @@ export default async function TranportPage({
   const skip = (pageNumber - 1) * take;
 
   const { data: posts, metadata } = await getPostsByParams(undefined, "asc", "all", take, skip);
-  if(pageNumber > metadata.totalPages) {
-    redirect(`/dashboard/transport?page=${metadata.totalPages}`);
-  }
 
   return (
     <DashboardShell>

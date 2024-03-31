@@ -2,10 +2,13 @@ import { authOptions, verifyCurrentUserIsAdmin } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
 import { db } from "@/lib/prisma";
-import { postPatchSchema } from "@/lib/validation/post";
+import { postUpdateRoute } from "@/lib/validation/post";
 
 import { NextResponse } from "next/server";
 import * as z from "zod";
+
+import { deleteFile } from "@uploadcare/rest-client";
+import { uploadcareAuthSchema } from "@/lib/uploadcare";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -29,6 +32,22 @@ export async function DELETE(
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
     }
+
+    const imageId = await db.transport.findMany({
+      where: {
+        id:Number(params.postId)
+      },
+      select: { image: true }
+    });
+    
+    await deleteFile(
+      {
+        uuid: imageId[0].image
+      }, 
+      {
+        authSchema: uploadcareAuthSchema
+      }
+    );
 
     await db.transport.delete({
       where: {
@@ -61,7 +80,7 @@ export async function PUT(
   try {
     const { params } = routeContextSchema.parse(context);
     const json = await req.json();
-    const body = postPatchSchema.parse(json);
+    const body = postUpdateRoute.parse(json);
   
     const user = await getServerSession(authOptions);
     if(!user) {
@@ -72,6 +91,22 @@ export async function PUT(
     if(!isAdmin) {
       return new NextResponse(null, { status: 403 });
     }
+
+    const imageId = await db.transport.findMany({
+      where: {
+        id:Number(params.postId)
+      },
+      select: { image: true }
+    });
+    
+    await deleteFile(
+      {
+        uuid: imageId[0].image
+      }, 
+      {
+        authSchema: uploadcareAuthSchema
+      }
+    );
   
     await db.transport.update({
       where: {
