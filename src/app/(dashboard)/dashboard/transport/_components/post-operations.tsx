@@ -17,10 +17,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { toast } from "@/components/ui/use-toast";
 
 import { Icons } from "@/components/icons";
-import EditTransport from "@/components/edit-post-dialog";
-import { toast } from "@/components/ui/use-toast";
+import { EditTransport } from "./edit-transport-dialog";
 
 import { Transport } from "@/types";
 
@@ -28,24 +28,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export async function deletePost(postId: number) {
-  const response = await fetch(`/api/posts/${postId}`, {
-    method: "DELETE"
-  });
-
-  if(!response?.ok) {
-    toast({
-      title: "Произошла ошибка",
-      description: "Не удалось удалить этот транспорт. Попробуйте снова.",
-      variant: "destructive"
+  try {
+    const response = await fetch(`/api/posts/${postId}`, {
+      method: "DELETE"
     });
+  
+    if(!response?.ok) {
+      throw new Error("Не удалось удалить транспорт. Попробуйте снова.");
+    }
+  
+    toast({
+      title: "Успешно",
+      description: "Транспорт был успешно удален.",
+    });
+    return true;
+
+  } catch(error) {
+    if(error instanceof Error) {
+      toast({
+        title: "Ошибка",
+        description: error.message,
+      });
+    }
+
     return false;
   }
-
-  toast({
-    title: "Успешно",
-    description: "Этот транспорт был успешно удален.",
-  });
-  return true;
 }
 
 export default function PostOperations({ post }: { post: Transport }) {
@@ -111,6 +118,9 @@ export default function PostOperations({ post }: { post: Transport }) {
                   setShowAlertDialog(false);
                   router.refresh();
                 }
+
+                setIsDeleteLoading(false);
+                setShowAlertDialog(false);
               }}
             >
               {isDeleteLoading ? (

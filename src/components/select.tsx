@@ -27,12 +27,9 @@ export default function SelectFilter({
       <SelectContent>
         <SelectGroup>
           {!items.length && (
-            <SelectItem
-              value="not-found"
-              disabled
-            >
-              Данные не найдено...
-            </SelectItem>
+            <div className="p-2">
+              <p className="text-sm text-muted-foreground">Данные не найдено...</p>
+            </div>
           )}
           {items.map(item => (
             <SelectItem

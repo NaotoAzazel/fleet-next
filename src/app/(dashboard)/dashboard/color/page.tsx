@@ -1,5 +1,4 @@
 import AddFilter from "@/components/add-filter-dialog";
-import AddTransport from "@/components/add-post-dialog";
 import { FilterItem } from "@/components/filter-item";
 
 import { Header } from "@/components/header";
