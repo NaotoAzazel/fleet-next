@@ -1,12 +1,12 @@
 import { Header } from "@/components/header";
-import DashboardShell from "@/components/shell";
+import DashboardShell from "./_components/shell";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatisticCard } from "@/components/statistic-card";
 import Loading from "@/components/loading";
 
 import { Icons } from "@/components/icons";
-import { StatisticItem } from "@/components/activity-leaders";
+import { StatisticItem } from "./_components/activity-leaders";
 
 type CardData = {
   label: string;

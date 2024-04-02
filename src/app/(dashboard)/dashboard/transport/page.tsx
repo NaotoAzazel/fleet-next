@@ -1,11 +1,11 @@
 import { PostItem } from "./_components/post-item";
 import { AddTransport } from "./_components/add-transport-dialog";
 
-import { EmptyPlaceholder } from "@/components/empty-placeholder";
+import DashboardShell from "../_components/shell";
+import DashboardPagination from "../_components/pagination";
 
+import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { Header } from "@/components/header";
-import DashboardShell from "@/components/shell";
-import DashboardPagination from "@/components/pagination";
 
 import { getPostsByParams } from "@/lib/posts";
 

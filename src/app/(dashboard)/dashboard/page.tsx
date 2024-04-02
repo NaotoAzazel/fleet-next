@@ -1,11 +1,11 @@
 import { StatisticCard } from "@/components/statistic-card";
-import { StatisticItem } from "@/components/activity-leaders";
-import BarChar from "@/components/overview";
+import { StatisticItem } from "./_components/activity-leaders";
+import BarChar from "./_components/overview";
 
 import { Icons } from "@/components/icons";
 
 import { Header } from "@/components/header";
-import DashboardShell from "@/components/shell";
+import DashboardShell from "./_components/shell";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 
 import { getActivities, getStatistics } from "@/lib/analytics";

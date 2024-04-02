@@ -1,9 +1,11 @@
-import AddFilter from "@/components/add-filter-dialog";
-import { FilterItem } from "@/components/filter-item";
+import AddFilter from "../_components/add-filter-dialog";
+import { FilterItem } from "../_components/filter-item";
 
+import DashboardPagination from "../_components/pagination";
+import DashboardShell from "../_components/shell";
+
+import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { Header } from "@/components/header";
-import DashboardPagination from "@/components/pagination";
-import DashboardShell from "@/components/shell";
 
 import { getCategoriesByParams } from "@/lib/posts";
 
@@ -27,15 +29,27 @@ export default async function CategoryPage({
       <Header heading="Категории" text="Ниже отображаються все категории">
         <AddFilter filterType="categories" />
       </Header>
-      <div className="divide-y divide-border rounded-md border">
-        {categories.map((category, i) => (
-          <FilterItem key={i} data={category} filterType="categories" />
-        ))}
-      </div>
-      {metadata.totalPages > pageNumber ? (
-        <DashboardPagination page={metadata.totalPages} {...metadata} />
-      ) : (
-        <DashboardPagination page={pageNumber} {...metadata} />
+      {!categories.length ? (
+        <EmptyPlaceholder>
+          <EmptyPlaceholder.Icon name="category" />
+          <EmptyPlaceholder.Title>Не удалось найти категории</EmptyPlaceholder.Title>
+          <EmptyPlaceholder.Description>
+            Не удалось найти ни одной категории
+          </EmptyPlaceholder.Description>
+        </EmptyPlaceholder>
+      ): (
+        <>
+          <div className="divide-y divide-border rounded-md border">
+            {categories.map((category, i) => (
+              <FilterItem key={i} data={category} filterType="categories" />
+            ))}
+          </div>
+          {metadata.totalPages > pageNumber ? (
+            <DashboardPagination page={metadata.totalPages} {...metadata} />
+          ) : (
+            <DashboardPagination page={pageNumber} {...metadata} />
+          )}
+        </>
       )}
     </DashboardShell>
   )
