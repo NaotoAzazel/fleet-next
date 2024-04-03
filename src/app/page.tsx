@@ -2,7 +2,7 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { featureCards } from "@/config/features";
 import { siteConfig } from "@/config/site";
-import FeatureCard from "@/components/feature-card";
+import FeatureCard from "@/components/cards/feature-card";
 import Link from "next/link";
 
 export default function Home() {

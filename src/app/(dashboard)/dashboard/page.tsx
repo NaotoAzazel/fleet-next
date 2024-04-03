@@ -1,4 +1,4 @@
-import { StatisticCard } from "@/components/statistic-card";
+import { StatisticCard } from "@/components/cards/statistic-card";
 import { StatisticItem } from "./_components/activity-leaders";
 import BarChar from "./_components/overview";
 

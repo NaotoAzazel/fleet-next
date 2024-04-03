@@ -2,7 +2,7 @@ import { Header } from "@/components/header";
 import DashboardShell from "./_components/shell";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { StatisticCard } from "@/components/statistic-card";
+import { StatisticCard } from "@/components/cards/statistic-card";
 import Loading from "@/components/loading";
 
 import { Icons } from "@/components/icons";
