@@ -21,7 +21,7 @@ export default async function TranportPage({
   const take = 8;
   const skip = (pageNumber - 1) * take;
 
-  const { data: posts, metadata } = await getPostsByParams(undefined, "asc", "all", take, skip);
+  const { data: posts, metadata } = await getPostsByParams({ take, skip });
 
   return (
     <DashboardShell>

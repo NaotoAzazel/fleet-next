@@ -15,13 +15,21 @@ interface Posts {
   metadata: Metadata;
 };
 
-export async function getPostsByParams(
-  name?: string, 
-  sort: Sort = "asc",
-  status: Status = "all",
-  take: number = 8,
-  skip: number = 0
-): Promise<Posts> {
+interface GetPostByParams {
+  name?: string;
+  sort?: Sort;
+  status?: Status;
+  take?: number;
+  skip?: number;
+}
+
+export async function getPostsByParams({
+  name = undefined,
+  sort = "asc",
+  status = "all",
+  take = 8,
+  skip = 0
+}: GetPostByParams): Promise<Posts> {
   const where: Prisma.TransportWhereInput = {};
 
   where.name = { startsWith: name, mode: "insensitive" };
