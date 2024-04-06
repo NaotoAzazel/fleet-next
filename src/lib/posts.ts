@@ -112,7 +112,16 @@ export async function getCategoriesByParams(
 export async function fetchData(
   filterType: FilterType
 ): Promise<FilterItem[]> {
-  const response = await fetch(`/api/posts/${filterType}`);
-  const data = await response.json();
-  return data as FilterItem[];
+  try {
+    const response = await fetch(`/api/posts/${filterType}`);
+
+    if(!response?.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    return data as FilterItem[];
+  } catch(error) {
+    return [];
+  }
 }
