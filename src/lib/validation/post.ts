@@ -65,4 +65,11 @@ export const postCreateRoute = z.object({
   image: z.string()
 });
 
-export const postUpdateRoute = postCreateRoute;
+export const postUpdateRoute = z.object({
+  name: z.string().optional(),
+  plate: z.string().optional(),
+  colorId: z.number().optional(),
+  categoryId: z.number().optional(),
+  image: z.string().optional(),
+  takeBy: z.string()
+});
