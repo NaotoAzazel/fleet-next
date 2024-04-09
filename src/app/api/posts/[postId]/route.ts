@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { db } from "@/lib/prisma";
 import { postUpdateRoute } from "@/lib/validation/post";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
 
 import { deleteFile } from "@uploadcare/rest-client";
@@ -73,18 +73,22 @@ export async function DELETE(
   }
 }
 
-const routeUpdateContextSchema = routeContextSchema.extend({
+const routeParams = z.object({
   source: z
     .enum(["reserve:take", "reserve:return", "edit"])
     .catch("edit")
 });
 
 export async function PUT(
-  req: Request,
-  context: z.infer<typeof routeUpdateContextSchema>
+  req: NextRequest,
+  context: z.infer<typeof routeContextSchema>
 ) {
   try {
-    const { params, source } = routeUpdateContextSchema.parse(context);
+    const { params } = routeContextSchema.parse(context);
+
+    const { source } = routeParams.parse({
+      source: req.nextUrl.searchParams.get("source")
+    });
 
     const user = await getServerSession(authOptions);
     if(!user) {
@@ -108,6 +112,10 @@ export async function PUT(
       case "reserve:take": {
         if(transport.takeBy === user.user.id) {
           throw new Error("Вы уже выбрали этот транспорт");
+        }
+
+        if(transport.takeBy.length) {
+          throw new Error("Этот траспорт уже зарезервирован");
         }
 
         await updateTakeBy(params.postId, body.takeBy);
