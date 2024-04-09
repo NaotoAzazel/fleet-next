@@ -1,9 +1,8 @@
 import AddFilter from "../_components/add-filter-dialog";
 import { FilterItem } from "../_components/filter-item";
-
-import DashboardPagination from "../_components/pagination";
 import DashboardShell from "../_components/shell";
 
+import { Pagination } from "@/components/pagination";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { Header } from "@/components/header";
 
@@ -45,9 +44,9 @@ export default async function CategoryPage({
             ))}
           </div>
           {metadata.totalPages > pageNumber ? (
-            <DashboardPagination page={metadata.totalPages} {...metadata} />
+            <Pagination page={metadata.totalPages} {...metadata} />
           ) : (
-            <DashboardPagination page={pageNumber} {...metadata} />
+            <Pagination page={pageNumber} {...metadata} />
           )}
         </>
       )}

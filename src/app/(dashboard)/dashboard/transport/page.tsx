@@ -1,9 +1,8 @@
 import { PostItem } from "./_components/post-item";
 import { AddTransport } from "./_components/add-transport-dialog";
-
 import DashboardShell from "../_components/shell";
-import DashboardPagination from "../_components/pagination";
 
+import { Pagination } from "@/components/pagination";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { Header } from "@/components/header";
 
@@ -42,7 +41,7 @@ export default async function TranportPage({
               <PostItem key={i} post={post} />
             ))}
           </div>
-          <DashboardPagination page={pageNumber} {...metadata} />
+          <Pagination page={pageNumber} {...metadata} />
         </>
       ) : (
         <EmptyPlaceholder>

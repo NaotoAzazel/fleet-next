@@ -1,9 +1,8 @@
 import AddFilter from "../_components/add-filter-dialog";
 import { FilterItem } from "../_components/filter-item";
-
-import DashboardPagination from "../_components/pagination";
 import DashboardShell from "../_components/shell";
 
+import { Pagination } from "@/components/pagination";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { Header } from "@/components/header";
 
@@ -44,7 +43,7 @@ export default async function ColorPage({
               <FilterItem key={i} data={color} filterType="colors" />
             ))}
           </div>
-          <DashboardPagination page={pageNumber} {...metadata} />
+          <Pagination page={pageNumber} {...metadata} />
         </>
       )}
     </DashboardShell>
