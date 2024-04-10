@@ -59,4 +59,4 @@ export type FilterItem = {
   name: string;
 }
 
-export type FilterType = "colors" | "categories";
+export type FilterType = "color" | "category";

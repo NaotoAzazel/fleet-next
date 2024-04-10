@@ -26,7 +26,7 @@ export default async function CategoryPage({
   return (
     <DashboardShell>
       <Header heading="Категории" text="Ниже отображаються все категории">
-        <AddFilter filterType="categories" />
+        <AddFilter filterType="category" />
       </Header>
       {!categories.length ? (
         <EmptyPlaceholder>
@@ -40,7 +40,7 @@ export default async function CategoryPage({
         <>
           <div className="divide-y divide-border rounded-md border">
             {categories.map((category, i) => (
-              <FilterItem key={i} data={category} filterType="categories" />
+              <FilterItem key={i} data={category} filterType="category" />
             ))}
           </div>
           {metadata.totalPages > pageNumber ? (

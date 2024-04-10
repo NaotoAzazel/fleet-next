@@ -135,8 +135,8 @@ export function AddTransport({
       if(isDialogOpen) {
         setIsDataLoading(true);
   
-        const colors = await fetchData("colors");
-        const categories = await fetchData("categories");
+        const colors = await fetchData("color");
+        const categories = await fetchData("category");
   
         setColors(colors);
         setCategories(categories);

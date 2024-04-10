@@ -123,7 +123,7 @@ export default function AddFilter({
                     <Input
                       autoComplete="off"
                       placeholder={
-                        filterType === "colors"
+                        filterType === "color"
                           ? "Красный"
                           : "Грузовой"
                       }

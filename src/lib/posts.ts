@@ -113,7 +113,7 @@ export async function fetchData(
   filterType: FilterType
 ): Promise<FilterItem[]> {
   try {
-    const response = await fetch(`/api/posts/${filterType}`);
+    const response = await fetch(`/api/${filterType}`);
 
     if(!response?.ok) {
       return [];

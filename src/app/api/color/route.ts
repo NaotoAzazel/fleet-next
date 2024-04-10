@@ -9,8 +9,12 @@ import { NextResponse } from "next/server";
 import * as z from "zod";
 
 export async function GET() {
-  const colors = await db.color.findMany();
-  return new Response(JSON.stringify(colors));
+  try {
+    const colors = await db.color.findMany();
+    return new NextResponse(JSON.stringify(colors), { status: 200 });
+  } catch(error) {
+    return new NextResponse(null, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {

@@ -180,8 +180,8 @@ export function EditTransport({
       setIsDataLoading(true);
 
       if(isShowDialog) {
-        const colors = await fetchData("colors");
-        const categories = await fetchData("categories");
+        const colors = await fetchData("color");
+        const categories = await fetchData("category");
         
         setCategories(categories);
         setColors(colors);

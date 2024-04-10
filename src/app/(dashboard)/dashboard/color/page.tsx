@@ -26,7 +26,7 @@ export default async function ColorPage({
   return (
     <DashboardShell>
       <Header heading="Цвета" text="Ниже отображаються все цвета">
-        <AddFilter filterType="colors" />
+        <AddFilter filterType="color" />
       </Header>
       {!colors.length ? (
         <EmptyPlaceholder>
@@ -40,7 +40,7 @@ export default async function ColorPage({
         <>
           <div className="divide-y divide-border rounded-md border">
             {colors.map((color, i) => (
-              <FilterItem key={i} data={color} filterType="colors" />
+              <FilterItem key={i} data={color} filterType="color" />
             ))}
           </div>
           <Pagination page={pageNumber} {...metadata} />
