@@ -1,9 +1,11 @@
 import { FilterItem, FilterType, Transport } from "@/types";
-import { Prisma } from "@prisma/client";
 import { db } from "@/lib/prisma";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 type Sort = "asc" | "desc";
-type Status = "avai" | "unavai" | "all";
+type Status = "avai" | "unavai" | "mytake" |"all";
 
 type Metadata = {
   totalPages: number;
@@ -21,7 +23,7 @@ interface GetPostByParams {
   status?: Status;
   take?: number;
   skip?: number;
-}
+};
 
 export async function getPostsByParams({
   name = undefined,
@@ -30,20 +32,25 @@ export async function getPostsByParams({
   take = 8,
   skip = 0
 }: GetPostByParams): Promise<Posts> {
-  const where: Prisma.TransportWhereInput = {};
+  const user = await getServerSession(authOptions);
 
-  where.name = { startsWith: name, mode: "insensitive" };
-
-  if(status !== "all") {
-    where.takeBy = status === "avai"
-      ? { equals: "" }
-      : { not: { equals: "" } };
+  const obj: Record<Status, any> = {
+    avai: { equals: "" }, 
+    unavai: { not: { equals: "", in: [user?.user.id] } },
+    mytake: { equals: user?.user.id },
+    all: undefined
   };
 
   const results = await db.transport.findMany({
     take,
     skip,
-    where,
+    where: {
+      name: {
+        startsWith: name,
+        mode: "insensitive"
+      },
+      takeBy: obj[status]
+    },
     orderBy: { name: sort },
     include: { color: true, category: true }
   });
