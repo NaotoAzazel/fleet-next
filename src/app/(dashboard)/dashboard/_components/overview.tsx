@@ -11,12 +11,14 @@ import {
 
 import Loading from "@/components/loading";
 
-const monthNames = [
-  "Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
-];
+type Activity = {
+  name: string;
+  total: number;
+};
 
 export default function BarChar() {
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<Activity[]>();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -25,15 +27,7 @@ export default function BarChar() {
 
       const res = await fetch("/api/statistic");
       const data = await res.json();
-
-      setData(
-        monthNames.map((month, i) => {
-          return {
-            name: month,
-            total: data[i]
-          };
-        }
-      ));
+      setData(data);
 
       setIsLoading(false);
     }
