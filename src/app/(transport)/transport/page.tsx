@@ -2,10 +2,9 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Header } from "@/components/header";
 import Filter from "@/components/filter";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
+import { Pagination } from "@/components/pagination";
 
 import { ProductCard } from "./_components/product-card";
-
-import { Transport } from "@/types";
 
 import { getPostsByParams } from "@/lib/posts";
 import { TransportPageSchema, transportPageSchema } from "@/lib/validation/pages";
@@ -15,23 +14,17 @@ export default async function TransportPage({
 }: { 
   searchParams: TransportPageSchema
 }) {
-  let posts: Transport[] = [];
-  const { search, sort, status } = transportPageSchema.parse({
+  const { search, sort, status, page } = transportPageSchema.parse({
     search: searchParams.search,
     status: searchParams.status,
-    sort: searchParams.sort
+    sort: searchParams.sort,
+    page: searchParams.page
   });
 
-  const { data: initialPosts } = await getPostsByParams({});
-  const { data: filteredPosts } = await getPostsByParams({ name: search, sort, status });
+  const POSTS_PER_PAGE = 8;
+  const skip = (page - 1) * POSTS_PER_PAGE;
 
-  if (search.length || status.length > 3 || sort.length > 3) {
-    if (filteredPosts) {
-      posts = filteredPosts;
-    } else posts = [];
-  } else {
-    posts = initialPosts ?? [];
-  }
+  const { data: posts, metadata } = await getPostsByParams({ name: search, sort, status, skip });
 
   return (
     <MaxWidthWrapper>
@@ -48,11 +41,14 @@ export default async function TransportPage({
             </EmptyPlaceholder.Description>
           </EmptyPlaceholder>
         ) : (
-          <div className="my-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {posts.map((post, i) => (
-              <ProductCard post={post} key={i} />
-            ))}
-          </div>
+            <>
+              <div className="my-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {posts.map((post, i) => (
+                    <ProductCard post={post} key={i} />
+                  ))}
+              </div>
+              <Pagination page={page} {...metadata} />
+            </>
         )}
       </div>
     </MaxWidthWrapper>

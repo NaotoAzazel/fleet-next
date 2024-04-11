@@ -8,7 +8,8 @@ const allowedValues = {
 export const transportPageSchema = z.object({
   search: z.string().catch(""),
   status: z.enum(allowedValues.status).catch(allowedValues.status[0]),
-  sort: z.enum(allowedValues.sort).catch(allowedValues.sort[0])
+  sort: z.enum(allowedValues.sort).catch(allowedValues.sort[0]),
+  page: z.string().transform(value => parseInt(value, 10)).catch(1),
 });
 
 export type TransportPageSchema = z.infer<typeof transportPageSchema>;
