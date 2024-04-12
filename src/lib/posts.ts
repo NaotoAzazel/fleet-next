@@ -55,7 +55,7 @@ export async function getPostsByParams({
     include: { color: true, category: true }
   });
 
-  const total = await db.transport.count();
+  const total = results.length;
 
   return {
     data: results,
