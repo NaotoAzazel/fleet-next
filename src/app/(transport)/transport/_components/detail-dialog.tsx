@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { MyImage } from "@/components/image";
+import { Icons } from "@/components/icons";
 
 import { Transport } from "@/types";
 
@@ -23,8 +24,12 @@ export function DetailDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          Подробнее
+        <Button 
+          variant="secondary" 
+          className="h-10"
+          size="sm"
+        >
+          <Icons.eye className="w-4 h-4" />
         </Button>
       </DialogTrigger>
       <DialogContent 

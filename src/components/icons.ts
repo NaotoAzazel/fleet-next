@@ -18,7 +18,8 @@ import {
   PaintBucket,
   LibrarySquare,
   BarChart3,
-  Image
+  Image,
+  Eye
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -42,5 +43,6 @@ export const Icons = {
   color: PaintBucket,
   category: LibrarySquare,
   chart: BarChart3,
-  image: Image
+  image: Image,
+  eye: Eye
 };

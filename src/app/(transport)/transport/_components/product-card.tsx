@@ -25,14 +25,14 @@ export async function ProductCard({ post }: { post: Transport }) {
         <h1>{post.name}</h1>
       </div>
 
-      <div className="flex items-center p-4">
-        <div className="flex w-full flex-col items-center gap-2 sm:flex-row sm:justify-between">
-          <DetailDialog post={post} />
+      <div className="flex items-center p-4 pt-1">
+        <div className="flex w-full items-center space-x-2">
           <ReserveButton 
             postId={post.id} 
             takeById={post.takeBy} 
             userId={session?.user.id} 
           />
+          <DetailDialog post={post} />
         </div>
       </div>
     </div>
