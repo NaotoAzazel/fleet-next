@@ -21,10 +21,7 @@ export default async function TransportPage({
     page: searchParams.page
   });
 
-  const POSTS_PER_PAGE = 8;
-  const skip = (page - 1) * POSTS_PER_PAGE;
-
-  const { data: posts, metadata } = await getPostsByParams({ name: search, sort, status, skip });
+  const { data: posts, metadata } = await getPostsByParams({ name: search, sort, status, page });
 
   return (
     <MaxWidthWrapper>

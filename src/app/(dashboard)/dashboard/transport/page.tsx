@@ -17,10 +17,7 @@ export default async function TranportPage({
 }: { searchParams: { page?: number }}) {
   const pageNumber = Number(searchParams.page) || 1;
 
-  const take = 8;
-  const skip = (pageNumber - 1) * take;
-
-  const { data: posts, metadata } = await getPostsByParams({ take, skip });
+  const { data: posts, metadata } = await getPostsByParams({ page: pageNumber });
 
   return (
     <DashboardShell>

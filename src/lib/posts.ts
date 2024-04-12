@@ -22,7 +22,7 @@ interface GetPostByParams {
   sort?: Sort;
   status?: Status;
   take?: number;
-  skip?: number;
+  page?: number;
 };
 
 export async function getPostsByParams({
@@ -30,7 +30,7 @@ export async function getPostsByParams({
   sort = "asc",
   status = "all",
   take = 8,
-  skip = 0
+  page = 0
 }: GetPostByParams): Promise<Posts> {
   const user = await getServerSession(authOptions);
 
@@ -42,8 +42,6 @@ export async function getPostsByParams({
   };
 
   const results = await db.transport.findMany({
-    take,
-    skip,
     where: {
       name: {
         startsWith: name,
@@ -55,13 +53,17 @@ export async function getPostsByParams({
     include: { color: true, category: true }
   });
 
-  const total = results.length;
+  const startIndex = (page - 1) * take;
+  const endIndex = startIndex + take;
+
+  const paginatedPosts = results.slice(startIndex, endIndex);
+  const totalResults = results.length;
 
   return {
-    data: results,
+    data: paginatedPosts,
     metadata: {
-      totalPages: Math.ceil(total / take),
-      totalRecords: total
+      totalPages: Math.ceil(totalResults / take),
+      totalRecords: totalResults
     }
   };
 }
