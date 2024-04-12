@@ -10,5 +10,6 @@ export const sortParams: Sort[] = [
 
 export const statusParams: Sort[] = [
   { label: "Доступна", value: "avai" },
-  { label: "Недоступна", value: "unavai" }
+  { label: "Недоступна", value: "unavai" },
+  { label: "Выбрано вами", value: "mytake" }
 ];

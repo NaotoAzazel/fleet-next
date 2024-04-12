@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 const allowedValues = {
-  status: ["all", "avai", "unavai"],
+  status: ["all", "avai", "unavai", "mytake"],
   sort: ["asc", "desc"]
 } as const;
 
