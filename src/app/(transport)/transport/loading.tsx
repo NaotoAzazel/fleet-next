@@ -16,8 +16,8 @@ export default function TransportPageLoading() {
          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between lg:justify-normal">
           <Skeleton className="w-full h-10 px-3" />
           <div className="flex gap-2 sm:overflow-x-visible sm:justify-normal justify-between flex-row items-center">
-            <Skeleton className="h-10 w-full lg:w-[180px] px-3" />
-            <Skeleton className="h-10 w-full lg:w-[180px] px-3" />
+            <Skeleton className="h-10 w-[180px] px-3" />
+            <Skeleton className="h-10 w-[180px] px-3" />
           </div>
         </div>
 
