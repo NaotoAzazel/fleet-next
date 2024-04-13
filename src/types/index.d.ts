@@ -12,6 +12,16 @@ export type NavbarConfig = {
   mainNav: MainNavItem[]
 };
 
+type MobileNavItem = {
+  title: string;
+  items: MainNavItem[]
+};
+
+export type MobileNavConfig = {
+  general: MobileNavItem[];
+  admin: MobileNavItem[]
+};
+
 export type SiteConfig = {
   name: string,
   gitHub: string,
