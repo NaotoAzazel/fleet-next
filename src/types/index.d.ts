@@ -1,25 +1,27 @@
 import { Icons } from "@/components/icons";
 
 export type NavItem = {
-  title: string,
-  href: string,
-  disabled?: boolean
-};
-
-export type MainNavItem = NavItem;
-
-export type NavbarConfig = {
-  mainNav: MainNavItem[]
-};
-
-type MobileNavItem = {
   title: string;
-  items: MainNavItem[]
+  href: string;
+  disabled?: boolean;
+  icon?: keyof typeof Icons;
 };
 
-export type MobileNavConfig = {
-  general: MobileNavItem[];
-  admin: MobileNavItem[]
+// main nav
+export type NavbarConfig = {
+  mainNav: NavItem[];
+  dashboardNav: NavItem[];
+};
+
+type NavItemContent = {
+  title: string;
+  items: NavItem[];
+};
+
+// sidebar nav 
+export type SideBarConfig = {
+  general: NavItemContent[];
+  admin: NavItemContent[];
 };
 
 export type SiteConfig = {

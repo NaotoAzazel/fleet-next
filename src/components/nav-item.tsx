@@ -1,12 +1,12 @@
-import { navbarConfig } from "@/config/nav"
-import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
+
+import { NavItem as NavItemType } from "@/types";
+import { cn } from "@/lib/utils";
+
 import Link from "next/link";
 
-type Category = typeof navbarConfig.mainNav[number];
-
 interface NavItemProps extends ButtonProps {
-  category: Category
+  category: NavItemType;
 };
 
 export default function NavItem({

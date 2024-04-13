@@ -1,19 +1,41 @@
-import { NavbarConfig, MobileNavConfig } from "@/types";
+import { NavbarConfig, SideBarConfig } from "@/types";
 
 export const navbarConfig: NavbarConfig = {
   mainNav: [
     {
       title: "Технологии",
-      href: "/#features"
+      href: "/#features",
     },
     {
       title: "Список транспорта",
-      href: "/transport"
+      href: "/transport",
+    }
+  ],
+  dashboardNav: [
+    {
+      title: "Общее",
+      href: "/dashboard",
+      icon: "notepad"
+    },
+    {
+      title: "Транспорт",
+      href: "/dashboard/transport",
+      icon: "car"
+    },
+    {
+      title: "Цвета",
+      href: "/dashboard/color",
+      icon: "color"
+    },
+    {
+      title: "Категории",
+      href: "/dashboard/category",
+      icon: "category"
     }
   ]
 };
 
-export const mobileNav: MobileNavConfig = {
+export const sideBarNav: SideBarConfig = {
   general: [
     {
       title: "Общее",
@@ -35,11 +57,13 @@ export const mobileNav: MobileNavConfig = {
       items: [
         {
           title: "Общее",
-          href: "/dashboard"
+          href: "/dashboard",
+          icon: "notepad"
         },
         {
           title: "Транспорт",
           href: "/dashboard/transport",
+          icon: "car"
         },
         {
           title: "Цвета",

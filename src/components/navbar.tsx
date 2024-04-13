@@ -10,7 +10,7 @@ import MobileNav from "@/components/mobile-nav";
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
-import { mobileNav } from "@/config/nav";
+import { navbarConfig, sideBarNav } from "@/config/nav";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -29,11 +29,11 @@ export default async function Navbar() {
             </Link>
 
             <div className="block md:hidden">
-              <MobileNav items={mobileNav} userId={user?.user.id} />
+              <MobileNav items={sideBarNav} userId={user?.user.id} />
             </div>
 
             <div className="hidden z-50 lg:ml-8 md:ml-4 md:block lg:self-stretch">
-              <NavItems />
+              <NavItems items={navbarConfig.mainNav} />
             </div>
 
             <div className="ml-auto items-center">

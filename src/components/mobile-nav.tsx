@@ -14,7 +14,7 @@ import { AccordionContentItem } from "@/components/accordion-item";
 import { Icons } from "@/components/icons";
 
 import { siteConfig } from "@/config/site";
-import { MobileNavConfig } from "@/types";
+import { SideBarConfig } from "@/types";
 
 import { adminIds } from "@/lib/constants";
 
@@ -23,7 +23,7 @@ import Link from "next/link";
 import * as React from "react";
 
 interface MobileNavProps {
-  items: MobileNavConfig;
+  items: SideBarConfig;
   userId: string;
 };
 
