@@ -5,7 +5,6 @@ import {
   Command,
   Menu,
   Database,
-  Component,
   UserRoundCheck,
   Sun,
   Moon,
@@ -19,7 +18,8 @@ import {
   LibrarySquare,
   BarChart3,
   Image,
-  Eye
+  Eye,
+  CircuitBoard,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -30,7 +30,6 @@ export const Icons = {
   logo: Command,
   menu: Menu,
   database: Database,
-  component: Component,
   auth: UserRoundCheck,
   sun: Sun,
   moon: Moon,
@@ -44,5 +43,6 @@ export const Icons = {
   category: LibrarySquare,
   chart: BarChart3,
   image: Image,
-  eye: Eye
+  eye: Eye,
+  circuitBoard: CircuitBoard,
 };
