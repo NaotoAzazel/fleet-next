@@ -7,10 +7,10 @@ import {
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { MobileNavItem } from "@/types";
+import { NavItemContent } from "@/types";
 
 interface AccordionContentItemProps {
-  items: MobileNavItem[];
+  items: NavItemContent[];
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
