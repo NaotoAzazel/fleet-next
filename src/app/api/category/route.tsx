@@ -9,8 +9,12 @@ import { NextResponse } from "next/server";
 import * as z from "zod";
 
 export async function GET() {
-  const categories = await db.category.findMany();
-  return new Response(JSON.stringify(categories));
+  try {
+    const categories = await db.category.findMany();
+    return new NextResponse(JSON.stringify(categories), { status: 200 });
+  } catch(error) {
+    return new NextResponse(null, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {

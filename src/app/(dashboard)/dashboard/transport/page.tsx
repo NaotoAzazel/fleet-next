@@ -1,11 +1,10 @@
 import { PostItem } from "./_components/post-item";
 import { AddTransport } from "./_components/add-transport-dialog";
+import DashboardShell from "../_components/shell";
 
+import { Pagination } from "@/components/pagination";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
-
 import { Header } from "@/components/header";
-import DashboardShell from "@/components/shell";
-import DashboardPagination from "@/components/pagination";
 
 import { getPostsByParams } from "@/lib/posts";
 
@@ -18,10 +17,7 @@ export default async function TranportPage({
 }: { searchParams: { page?: number }}) {
   const pageNumber = Number(searchParams.page) || 1;
 
-  const take = 8;
-  const skip = (pageNumber - 1) * take;
-
-  const { data: posts, metadata } = await getPostsByParams(undefined, "asc", "all", take, skip);
+  const { data: posts, metadata } = await getPostsByParams({ page: pageNumber });
 
   return (
     <DashboardShell>
@@ -42,7 +38,7 @@ export default async function TranportPage({
               <PostItem key={i} post={post} />
             ))}
           </div>
-          <DashboardPagination page={pageNumber} {...metadata} />
+          <Pagination page={pageNumber} {...metadata} />
         </>
       ) : (
         <EmptyPlaceholder>

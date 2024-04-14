@@ -20,7 +20,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 
 import { Icons } from "@/components/icons";
-import EditFilter from "@/components/edit-filter-dialog";
+import EditFilter from "./edit-filter-dialog";
   
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -31,24 +31,32 @@ async function deletePost(
   postId: number, 
   filterType: FilterType
 ): Promise<boolean> {
-  const response = await fetch(`/api/posts/${filterType}/${postId}`, {
-    method: "DELETE"
-  });
-
-  if(!response?.ok) {
-    toast({
-      title: "Произошла ошибка",
-      description: "Не удалось удалить этот транспорт. Попробуйте снова.",
-      variant: "destructive"
+  try {
+    const response = await fetch(`/api/posts/${filterType}/${postId}`, {
+      method: "DELETE"
     });
+
+    if(!response?.ok) {
+      throw new Error("Не удалось удалить этот пост. Попробуйте снова.");
+    }
+
+    toast({
+      title: "Успешно",
+      description: "Пост был успешно удален.",
+    });
+    return true;
+
+  } catch(error) {
+    if(error instanceof Error) {
+      toast({
+        title: "Произошла ошибка",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+
     return false;
   }
-
-  toast({
-    title: "Успешно",
-    description: "Этот транспорт был успешно удален.",
-  });
-  return true;
 }
 
 export default function FilterOperations({ 

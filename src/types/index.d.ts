@@ -1,15 +1,27 @@
 import { Icons } from "@/components/icons";
 
 export type NavItem = {
-  title: string,
-  href: string,
-  disabled?: boolean
+  title: string;
+  href: string;
+  disabled?: boolean;
+  icon?: keyof typeof Icons;
 };
 
-export type MainNavItem = NavItem;
-
+// main nav
 export type NavbarConfig = {
-  mainNav: MainNavItem[]
+  mainNav: NavItem[];
+  dashboardNav: NavItem[];
+};
+
+type NavItemContent = {
+  title: string;
+  items: NavItem[];
+};
+
+// sidebar nav 
+export type SideBarConfig = {
+  general: NavItemContent[];
+  admin: NavItemContent[];
 };
 
 export type SiteConfig = {
@@ -59,4 +71,4 @@ export type FilterItem = {
   name: string;
 }
 
-export type FilterType = "colors" | "categories";
+export type FilterType = "color" | "category";

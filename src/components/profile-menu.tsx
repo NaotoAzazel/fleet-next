@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
 import { adminIds } from "@/lib/constants";
-import { dashboardConfig } from "@/config/dashboard";
+import { navbarConfig } from "@/config/nav";
 
 import { useState } from "react";
 
@@ -52,7 +52,7 @@ export default function ProfileMenu({
         <DropdownMenuGroup>
           {adminIds.has(user?.id as string) && (
             <>
-              {dashboardConfig.sidebarNav.map((item, i) => (
+              {navbarConfig.dashboardNav.map((item, i) => (
                 <Link key={i} href={item.href}>
                   <DropdownMenuItem 
                     key={i} 

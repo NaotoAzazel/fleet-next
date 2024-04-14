@@ -38,7 +38,7 @@ async function updatePost(
   postId: number,
   name: string
 ) {
-  const response = await fetch(`/api/posts/${postType}/${postId}`, {
+  const response = await fetch(`/api/${postType}/${postId}`, {
     method: "PUT",
     headers: {
       "Content-type": "application/json"

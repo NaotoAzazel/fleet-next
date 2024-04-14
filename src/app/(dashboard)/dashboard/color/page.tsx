@@ -1,9 +1,10 @@
-import AddFilter from "@/components/add-filter-dialog";
-import { FilterItem } from "@/components/filter-item";
+import AddFilter from "../_components/add-filter-dialog";
+import { FilterItem } from "../_components/filter-item";
+import DashboardShell from "../_components/shell";
 
+import { Pagination } from "@/components/pagination";
+import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { Header } from "@/components/header";
-import DashboardPagination from "@/components/pagination";
-import DashboardShell from "@/components/shell";
 
 import { getColorsByParams } from "@/lib/posts";
 
@@ -25,14 +26,26 @@ export default async function ColorPage({
   return (
     <DashboardShell>
       <Header heading="Цвета" text="Ниже отображаються все цвета">
-        <AddFilter filterType="colors" />
+        <AddFilter filterType="color" />
       </Header>
-      <div className="divide-y divide-border rounded-md border">
-        {colors.map((color, i) => (
-          <FilterItem key={i} data={color} filterType="colors" />
-        ))}
-      </div>
-      <DashboardPagination page={pageNumber} {...metadata} />
+      {!colors.length ? (
+        <EmptyPlaceholder>
+          <EmptyPlaceholder.Icon name="color" />
+          <EmptyPlaceholder.Title>Не удалось найти цвета</EmptyPlaceholder.Title>
+          <EmptyPlaceholder.Description>
+            Не удалось найти ни одного цвета
+          </EmptyPlaceholder.Description>
+        </EmptyPlaceholder>
+      ): (
+        <>
+          <div className="divide-y divide-border rounded-md border">
+            {colors.map((color, i) => (
+              <FilterItem key={i} data={color} filterType="color" />
+            ))}
+          </div>
+          <Pagination page={pageNumber} {...metadata} />
+        </>
+      )}
     </DashboardShell>
   )
 }

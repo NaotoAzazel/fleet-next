@@ -35,7 +35,7 @@ import { FilterType } from "@/types";
 
 async function createPost(name: string, variant: FilterType)
   : Promise<boolean> {
-  const response = await fetch(`/api/posts/${variant}`, {
+  const response = await fetch(`/api/${variant}`, {
     method: "POST",
     headers: {
       "Content-type": "application/json"
@@ -123,7 +123,7 @@ export default function AddFilter({
                     <Input
                       autoComplete="off"
                       placeholder={
-                        filterType === "colors"
+                        filterType === "color"
                           ? "Красный"
                           : "Грузовой"
                       }

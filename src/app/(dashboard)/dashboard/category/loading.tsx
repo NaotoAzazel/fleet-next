@@ -1,7 +1,7 @@
 import { Header } from "@/components/header";
-import DashboardShell from "@/components/shell";
+import DashboardShell from "../_components//shell";
 
-import { FilterItem } from "@/components/filter-item";
+import { FilterItem } from "../_components/filter-item";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {

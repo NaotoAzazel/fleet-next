@@ -1,10 +1,9 @@
 import { authOptions, verifyCurrentUserIsAdmin } from "@/lib/auth";
-import { NextResponse } from "next/server";
 import { db } from "@/lib/prisma";
+
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 
-// TODO: change return value to 
-// activity: { Январь: 1, Февраль: 44, ... }
 export async function GET() {
   try {
     const user = await getServerSession(authOptions);
@@ -29,21 +28,27 @@ export async function GET() {
         createdAt: "asc",
       },
     });
-    
-    const formattedActivities = Array(12).fill(0);
-    const activitiesByMonth: any = {};
-    
-    activities.forEach(activity => {
-      const createdAt = new Date(activity.createdAt);
-      const month = `${createdAt.getMonth() + 1}`;
-      activitiesByMonth[month] = (activitiesByMonth[month] || 0) + 1;
-    });
-    
-    for(let i = 1; i <= 12; i++) {
-      formattedActivities[i - 1] = activitiesByMonth[i] || 0;
-    }
 
-    return new NextResponse(JSON.stringify(formattedActivities), { status: 200 });
+    const monthNames = [
+      "Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
+    ];
+
+    const activitiesByMonth = monthNames.map(month => {
+      return {
+        name: month,
+        total: 0
+      }
+    });
+
+    activities.forEach((activity) => {
+      const createdAt = new Date(activity.createdAt);
+      const month = createdAt.getMonth();
+
+      const monthValue: number = activitiesByMonth[month].total;
+      activitiesByMonth[month].total = monthValue + 1;
+    });
+
+    return new NextResponse(JSON.stringify(activitiesByMonth), { status: 200 });
   } catch(error) {
     return new NextResponse(null, { status: 500 });
   }

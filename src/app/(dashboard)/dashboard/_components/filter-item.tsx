@@ -1,7 +1,7 @@
 import { FilterItem, FilterType } from "@/types";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import FilterOperations from "@/components/filter-operations";
+import FilterOperations from "./filter-operations";
 
 export function FilterItem({ 
   data, 

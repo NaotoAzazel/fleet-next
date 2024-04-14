@@ -47,6 +47,7 @@ interface UpdatePostParams {
   colorId: number;
   categoryId: number;
   plate: string;
+  takeBy: string;
   image: File | string;
 };
 
@@ -56,6 +57,7 @@ export async function updatePost({
   colorId,
   categoryId,
   plate,
+  takeBy,
   image
 }: UpdatePostParams) {
   try {
@@ -73,7 +75,8 @@ export async function updatePost({
         name, 
         colorId,
         categoryId,
-        plate, 
+        plate,
+        takeBy, 
         image
       })
     });
@@ -131,6 +134,7 @@ export function EditTransport({
       colorId,
       categoryId,
       plate,
+      takeBy: post.takeBy,
       image
     });
 
@@ -176,8 +180,8 @@ export function EditTransport({
       setIsDataLoading(true);
 
       if(isShowDialog) {
-        const colors = await fetchData("colors");
-        const categories = await fetchData("categories");
+        const colors = await fetchData("color");
+        const categories = await fetchData("category");
         
         setCategories(categories);
         setColors(colors);

@@ -1,12 +1,13 @@
 "use client"
 
 import {
-  Pagination,
+  Pagination as Pagi,
   PaginationContent,
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
+
 import { useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -16,10 +17,13 @@ type PaginationProps = {
   totalRecords: number;
 };
 
-export default function DashboardPagination(props: PaginationProps) {
+export function Pagination(props: PaginationProps) {
   const { page: currentPage = 1, totalRecords, totalPages } = props;
+
+  const RECORDS_PER_PAGE = 8;
+
   const pages = [];
-  for (let i = 1; i <= Math.ceil(totalRecords / 8); i++) {
+  for (let i = 1; i <= Math.ceil(totalRecords / RECORDS_PER_PAGE); i++) {
     pages.push(i);
   }
 
@@ -47,7 +51,7 @@ export default function DashboardPagination(props: PaginationProps) {
   }
 
   return (
-    <Pagination className="justify-between items-center">
+    <Pagi className="justify-between items-center">
       <p className="text-muted-foreground text-sm">
         Страница {currentPage} из {totalPages}
       </p>
@@ -65,6 +69,6 @@ export default function DashboardPagination(props: PaginationProps) {
           />
         </PaginationItem>
       </PaginationContent>
-    </Pagination>
+    </Pagi>
   )
 }

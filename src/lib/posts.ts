@@ -1,9 +1,11 @@
 import { FilterItem, FilterType, Transport } from "@/types";
-import { Prisma } from "@prisma/client";
 import { db } from "@/lib/prisma";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 type Sort = "asc" | "desc";
-type Status = "avai" | "unavai" | "all";
+type Status = "avai" | "unavai" | "mytake" |"all";
 
 type Metadata = {
   totalPages: number;
@@ -15,38 +17,53 @@ interface Posts {
   metadata: Metadata;
 };
 
-export async function getPostsByParams(
-  name?: string, 
-  sort: Sort = "asc",
-  status: Status = "all",
-  take: number = 8,
-  skip: number = 0
-): Promise<Posts> {
-  const where: Prisma.TransportWhereInput = {};
+interface GetPostByParams {
+  name?: string;
+  sort?: Sort;
+  status?: Status;
+  take?: number;
+  page?: number;
+};
 
-  where.name = { startsWith: name, mode: "insensitive" };
+export async function getPostsByParams({
+  name = undefined,
+  sort = "asc",
+  status = "all",
+  take = 8,
+  page = 0
+}: GetPostByParams): Promise<Posts> {
+  const user = await getServerSession(authOptions);
 
-  if(status !== "all") {
-    where.takeBy = status === "avai"
-      ? { equals: "" }
-      : { not: { equals: "" } };
+  const obj: Record<Status, any> = {
+    avai: { equals: "" }, 
+    unavai: { not: { equals: "", in: [user?.user.id] } },
+    mytake: { equals: user?.user.id },
+    all: undefined
   };
 
   const results = await db.transport.findMany({
-    take,
-    skip,
-    where,
+    where: {
+      name: {
+        startsWith: name,
+        mode: "insensitive"
+      },
+      takeBy: obj[status]
+    },
     orderBy: { name: sort },
     include: { color: true, category: true }
   });
 
-  const total = await db.transport.count();
+  const startIndex = (page - 1) * take;
+  const endIndex = startIndex + take;
+
+  const paginatedPosts = results.slice(startIndex, endIndex);
+  const totalResults = results.length;
 
   return {
-    data: results,
+    data: paginatedPosts,
     metadata: {
-      totalPages: Math.ceil(total / take),
-      totalRecords: total
+      totalPages: Math.ceil(totalResults / take),
+      totalRecords: totalResults
     }
   };
 }
@@ -104,7 +121,16 @@ export async function getCategoriesByParams(
 export async function fetchData(
   filterType: FilterType
 ): Promise<FilterItem[]> {
-  const response = await fetch(`/api/posts/${filterType}`);
-  const data = await response.json();
-  return data as FilterItem[];
+  try {
+    const response = await fetch(`/api/${filterType}`);
+
+    if(!response?.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    return data as FilterItem[];
+  } catch(error) {
+    return [];
+  }
 }
