@@ -170,10 +170,22 @@ export function EditTransport({
       colorId: post.colorId,
       category: post.category.name,
       categoryId: post.categoryId,
-      image: previewImage
+      image: post.image
     },
     mode: "onChange"
   });
+
+  React.useEffect(() => {
+    form.reset({
+      name: post.name,
+      plate: post.plate,
+      color: post.color.name,
+      colorId: post.colorId,
+      category: post.category.name,
+      categoryId: post.categoryId,
+      image: post.image
+    });
+  }, [post, form])
 
   React.useEffect(() => {
     const fetchFilters = async(isShowDialog: boolean) => {
@@ -191,7 +203,6 @@ export function EditTransport({
     }
 
     fetchFilters(showEditDialog);
-    form.reset(undefined, { keepDirtyValues: true });
   }, [showEditDialog])
   
   return (
@@ -217,7 +228,7 @@ export function EditTransport({
                 <div className="space-y-2">
                   <MyImage.Container>
                     <MyImage
-                      src={previewImage} 
+                      src={form.getValues("image") as string} 
                       className={cn(
                         !post.image && "border rounded py-24"
                       )}
